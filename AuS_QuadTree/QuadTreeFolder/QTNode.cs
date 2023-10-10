@@ -12,8 +12,9 @@ namespace AuS_QuadTree.QuadTreeFolder
         private QTNode<TKey>[] children = new QTNode<TKey>[4];
         private List<TKey> records;
         private QTNode<TKey> parent;
-        private int x1, y1, x2, y2;
         private bool isLeaf;
+        int height;
+        //suradnice ktore node ohranicuje????
 
         public QTNode()
         {

@@ -22,7 +22,7 @@ namespace AuS_QuadTree.QuadTreeFolder
         public bool Insert(TKey key)
         {
             QTNode<TKey> node = root;
-            key.CompareTo(node);
+            int result = key.CompareTo(node);
             return true;
         }
     }

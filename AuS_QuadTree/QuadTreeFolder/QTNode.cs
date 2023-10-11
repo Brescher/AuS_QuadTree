@@ -7,18 +7,24 @@ using System.Xml.Linq;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
-    internal class QTNode<TKey> where TKey : IComparable<TKey>
+    public class QTNode<TKey> where TKey : IComparable<TKey>
     {
         private QTNode<TKey>[] children = new QTNode<TKey>[4];
         private List<TKey> records;
         private QTNode<TKey> parent;
         private bool isLeaf;
         int height;
-        //suradnice ktore node ohranicuje????
+        double lowerBoundX, lowerBoundY, upperBoundX, upperBoundY;
 
-        public QTNode()
+        public QTNode(double lowerX_, double lowerY_, double upperX_, double upperY_)
         {
             isLeaf = true;
+            this.lowerBoundX = lowerX_;
+            this.lowerBoundY = lowerY_;
+            this.upperBoundX = upperX_;
+            this.upperBoundY = upperY_;
         }
+
+        
     }
 }

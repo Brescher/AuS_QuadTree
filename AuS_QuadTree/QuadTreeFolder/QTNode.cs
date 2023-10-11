@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
-    public class QTNode<TKey> where TKey : IComparable<TKey>
+    public class QTNode<TKey>
     {
         private QTNode<TKey>[] children = new QTNode<TKey>[4];
         private List<TKey> records;

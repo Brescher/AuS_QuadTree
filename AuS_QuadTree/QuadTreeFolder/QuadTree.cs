@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
-    public class QuadTree<TKey> where TKey : IComparable<TKey>, IQTData<TKey>
+    public class QuadTree<TKey> where TKey : IQTData<TKey>
     {
         QTNode<TKey> root;
         double maxX, maxY;

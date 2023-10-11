@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
-    public interface IQTData<TKey> where TKey : IComparable<TKey>
+    public interface IQTData<TKey>// where TKey : IComparable<TKey>
     {
         int CompareTo(QTNode<TKey> node_);
     }
+
+    //public interface IComparable<TKey>
+    //{
+    //    int CompareTo(QTNode<TKey> node_);
+    //}
 }

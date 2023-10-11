@@ -9,10 +9,10 @@ namespace AuS_QuadTree.QuadTreeFolder
 {
     public class QTNode<TKey>
     {
-        private QTNode<TKey>[] children = new QTNode<TKey>[4];
-        private List<TKey> records;
-        private QTNode<TKey> parent;
-        private bool isLeaf;
+        QTNode<TKey>[] children = new QTNode<TKey>[4];
+        List<TKey> records;
+        QTNode<TKey> parent;
+        bool isLeaf;
         int height;
         double lowerBoundX, lowerBoundY, upperBoundX, upperBoundY;
 

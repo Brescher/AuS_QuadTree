@@ -16,23 +16,24 @@ namespace AuS_QuadTree.QuadTreeFolder
         int height;
         double lowerBoundX, lowerBoundY, upperBoundX, upperBoundY;
 
-        public QTNode(double lowerX_, double lowerY_, double upperX_, double upperY_)
+        public QTNode(double lowerX_, double lowerY_, double upperX_, double upperY_, int height_)
         {
             isLeaf = true;
             this.lowerBoundX = lowerX_;
             this.lowerBoundY = lowerY_;
             this.upperBoundX = upperX_;
             this.upperBoundY = upperY_;
+            this.height = height_;
         }
 
         public bool AllocateSons()
         {
             if (!HasSons())
             {
-                children[0] = new QTNode<TKey>(lowerBoundX, lowerBoundY, upperBoundX/2d, upperBoundY/2d);
-                children[1] = new QTNode<TKey>(upperBoundX/2d, upperBoundY, upperBoundX, upperBoundY/2d);
-                children[2] = new QTNode<TKey>(upperBoundX/2d, upperBoundY/2d, upperBoundX, upperBoundY);
-                children[3] = new QTNode<TKey>(lowerBoundX, upperBoundY/2d, upperBoundX/2d, upperBoundY);
+                children[0] = new QTNode<TKey>(lowerBoundX, lowerBoundY, upperBoundX/2d, upperBoundY/2d, height++);
+                children[1] = new QTNode<TKey>(upperBoundX/2d, upperBoundY, upperBoundX, upperBoundY/2d, height++);
+                children[2] = new QTNode<TKey>(upperBoundX/2d, upperBoundY/2d, upperBoundX, upperBoundY, height++);
+                children[3] = new QTNode<TKey>(lowerBoundX, upperBoundY/2d, upperBoundX/2d, upperBoundY, height++);
                 isLeaf = false;
                 return true;
             } else

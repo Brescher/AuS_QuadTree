@@ -16,7 +16,7 @@ namespace AuS_QuadTree.QuadTreeFolder
         {
             maxX = maxX_;
             maxY = maxY_;
-            root = new QTNode<TKey>(0, 0, maxX, maxY);
+            root = new QTNode<TKey>(0, 0, maxX, maxY, 1);
         }
 
         public bool Insert(TKey key)

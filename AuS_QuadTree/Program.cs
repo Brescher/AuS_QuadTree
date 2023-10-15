@@ -29,8 +29,9 @@ namespace AuS_QuadTree
             Parcel p1 = new Parcel(1, "parcela 1", gps1, gps2);
             Parcel p2 = new Parcel(2, "parcela 2", gps3, gps4);
 
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(100, 100);
-
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(100d, 100d, 10);
+            tree.Insert(p1);
+            tree.Insert(p2);
         }
     }
 }

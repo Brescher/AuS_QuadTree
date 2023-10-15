@@ -19,11 +19,87 @@ namespace AuS_QuadTree.QuadTreeFolder
             root = new QTNode<TKey>(0, 0, maxX, maxY, 1);
         }
 
-        public bool Insert(TKey key)
+        public void Insert(TKey key)
         {
-            QTNode<TKey> node = root;
-            int result = key.CompareTo(node);
-            return true;
+            QTNode<TKey> helpNode = root;
+            TKey helpData;
+            Queue<TKey> qData = new Queue<TKey>();
+            Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
+            qData.Enqueue(key); 
+            qNodes.Enqueue(helpNode);
+
+            while(qData.Count > 0)
+            {
+                helpData = qData.Dequeue();
+                helpNode = qNodes.Dequeue();
+
+                if(helpData == null )
+                {
+                    throw new Exception("null data");
+                } 
+                else if (helpNode.Height == maxHeight)
+                {
+                    switch (helpData.CompareTo(helpNode))
+                    {
+                        case 1:
+                            helpNode.Records.Add(helpData);
+                            break;
+                        case -1:
+                            helpNode.Parent.DoesntFitInSon.Add(helpData);
+                            break;
+                        default:
+                            throw new Exception("null data");
+                            break;
+                    }
+                }
+                else if(helpNode.Height == 1 && helpData.CompareTo(helpNode) == -1)
+                {
+                    throw new Exception("Data bigger than tree");
+                }
+                else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1 
+                        && (helpNode.Records.Count == 0 && helpNode.DoesntFitInSon.Count == 0))
+                {
+                    helpNode.Records.Add(helpData);
+                }
+                else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1
+                        && (helpNode.Records.Count > 0 || helpNode.DoesntFitInSon.Count > 0))
+                {
+                    if(SonExists(helpNode, helpData))
+                    {
+                        helpNode = FindSonNode(helpNode, helpData);
+                        helpNode.Records.Add(helpData);
+                        helpNode = helpNode.Parent;
+                    }else
+                    {
+                        helpNode.DoesntFitInSon.Add(helpData);
+                    }
+                    if(helpNode.Records.Count > 0)
+                    {
+                        foreach(TKey record in helpNode.Records)
+                        {
+                            qData.Enqueue(record);
+                            qNodes.Enqueue(helpNode);
+                        }
+                        helpNode.Records.Clear();
+                    }
+                }else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == -1)
+                {
+                    helpNode.Parent.DoesntFitInSon.Add(helpData);
+                }
+                else if(!helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1)
+                {
+                    if(SonExists(helpNode, helpData))
+                    {
+                        helpNode = FindSonNode(helpNode, helpData);
+                        qData.Enqueue(helpData);
+                        qNodes.Enqueue(helpNode);
+                    } else
+                    {
+                        helpNode.DoesntFitInSon.Add(helpData);
+                    }
+                }
+            }
+            
         }
 
 

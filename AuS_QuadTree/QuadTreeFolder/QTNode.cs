@@ -10,7 +10,8 @@ namespace AuS_QuadTree.QuadTreeFolder
     public class QTNode<TKey>
     {
         QTNode<TKey>[] children = new QTNode<TKey>[4];
-        List<TKey> records, doesntFitInSon;
+        List<TKey> records = new List<TKey>();
+        List<TKey> doesntFitInSon = new List<TKey>();
         QTNode<TKey> parent;
         bool isLeaf;
         int height;

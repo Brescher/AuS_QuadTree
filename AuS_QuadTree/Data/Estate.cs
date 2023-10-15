@@ -22,19 +22,46 @@ namespace AuS_QuadTree.Data
         internal List<Parcel> LocatedOn { get => locatedOn; set => locatedOn = value; }
         #endregion 
 
-        public Estate(int index, string description, GPS upperBound, GPS lowerBound)
+        public Estate(int index_, string description_, GPS upperBound_, GPS lowerBound_)
         {
-            this.Index = index;
-            this.Description = description;
-            this.UpperBound = upperBound;
-            this.LowerBound = lowerBound;
+            this.Index = index_;
+            this.Description = description_;
+            this.UpperBound = upperBound_;
+            this.LowerBound = lowerBound_;
+
+            if (LowerBound.LatitudeAccuracy > UpperBound.LatitudeAccuracy)
+            {
+                double hlp = UpperBound.LatitudeAccuracy;
+                UpperBound.LatitudeAccuracy = LowerBound.LatitudeAccuracy;
+                LowerBound.LatitudeAccuracy = hlp;
+            }
+            if (LowerBound.LongitudeAccuracy > UpperBound.LongitudeAccuracy)
+            {
+                double hlp = UpperBound.LongitudeAccuracy;
+                UpperBound.LongitudeAccuracy = LowerBound.LongitudeAccuracy;
+                LowerBound.LongitudeAccuracy = hlp;
+            }
         }
 
         
 
         public int CompareTo(QTNode<Parcel> node_)
         {
-            throw new NotImplementedException();
+            if (node_ == null)
+            {
+                return 0;
+            }
+            else if ((LowerBound.LatitudeAccuracy > node_.LowerBoundX && LowerBound.LatitudeAccuracy < node_.UpperBoundX) &&
+               (LowerBound.LongitudeAccuracy > node_.LowerBoundY && LowerBound.LongitudeAccuracy < node_.UpperBoundY) &&
+               (UpperBound.LatitudeAccuracy > node_.LowerBoundX && UpperBound.LatitudeAccuracy < node_.UpperBoundX) &&
+               (UpperBound.LongitudeAccuracy > node_.LowerBoundY && UpperBound.LongitudeAccuracy < node_.UpperBoundY))
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
         }
     }
 }

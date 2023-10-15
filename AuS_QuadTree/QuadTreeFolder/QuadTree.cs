@@ -11,17 +11,24 @@ namespace AuS_QuadTree.QuadTreeFolder
         QTNode<TKey> root;
         double maxX, maxY;
         int maxHeight;
+        #region properties
+        public QTNode<TKey> Root { get => root; set => root = value; }
+        public double MaxX { get => maxX; set => maxX = value; }
+        public double MaxY { get => maxY; set => maxY = value; }
+        public int MaxHeight { get => maxHeight; set => maxHeight = value; }
+        #endregion
 
-        public QuadTree(double maxX_, double maxY_)
+        public QuadTree(double maxX_, double maxY_, int maxHeight_)
         {
-            maxX = maxX_;
-            maxY = maxY_;
-            root = new QTNode<TKey>(0, 0, maxX, maxY, 1);
+            MaxX = maxX_;
+            MaxY = maxY_;
+            MaxHeight = maxHeight_;
+            Root = new QTNode<TKey>(0, 0, MaxX, MaxY, 1);
         }
 
         public void Insert(TKey key)
         {
-            QTNode<TKey> helpNode = root;
+            QTNode<TKey> helpNode = Root;
             TKey helpData;
             Queue<TKey> qData = new Queue<TKey>();
             Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
@@ -37,7 +44,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                 {
                     throw new Exception("null data");
                 } 
-                else if (helpNode.Height == maxHeight)
+                else if (helpNode.Height == MaxHeight)
                 {
                     switch (helpData.CompareTo(helpNode))
                     {

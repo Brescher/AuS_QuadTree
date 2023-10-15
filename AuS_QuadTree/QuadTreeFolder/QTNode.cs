@@ -16,30 +16,44 @@ namespace AuS_QuadTree.QuadTreeFolder
         int height;
         double lowerBoundX, lowerBoundY, upperBoundX, upperBoundY;
 
+        #region properties
+        public QTNode<TKey>[] Children { get => children; set => children = value; }
+        public List<TKey> Records { get => records; set => records = value; }
+        public List<TKey> DoesntFitInSon { get => doesntFitInSon; set => doesntFitInSon = value; }
+        public QTNode<TKey> Parent { get => parent; set => parent = value; }
+        public bool IsLeaf { get => isLeaf; set => isLeaf = value; }
+        public int Height { get => height; set => height = value; }
+        public double LowerBoundX { get => lowerBoundX; set => lowerBoundX = value; }
+        public double LowerBoundY { get => lowerBoundY; set => lowerBoundY = value; }
+        public double UpperBoundX { get => upperBoundX; set => upperBoundX = value; }
+        public double UpperBoundY { get => upperBoundY; set => upperBoundY = value; }
+        #endregion
+
         public QTNode(double lowerX_, double lowerY_, double upperX_, double upperY_, int height_)
         {
-            isLeaf = true;
-            this.lowerBoundX = lowerX_;
-            this.lowerBoundY = lowerY_;
-            this.upperBoundX = upperX_;
-            this.upperBoundY = upperY_;
-            this.height = height_;
-            this.parent = null;
+            IsLeaf = true;
+            this.LowerBoundX = lowerX_;
+            this.LowerBoundY = lowerY_;
+            this.UpperBoundX = upperX_;
+            this.UpperBoundY = upperY_;
+            this.Height = height_;
+            this.Parent = null;
         }
+        
 
         public bool AllocateSons()
         {
             if (!HasSons())
             {
-                children[0] = new QTNode<TKey>(lowerBoundX, lowerBoundY, upperBoundX/2d, upperBoundY/2d, height++);
-                children[0].parent = this;
-                children[1] = new QTNode<TKey>(upperBoundX/2d, upperBoundY, upperBoundX, upperBoundY/2d, height++);
-                children[1].parent = this;
-                children[2] = new QTNode<TKey>(upperBoundX/2d, upperBoundY/2d, upperBoundX, upperBoundY, height++);
-                children[2].parent = this;
-                children[3] = new QTNode<TKey>(lowerBoundX, upperBoundY/2d, upperBoundX/2d, upperBoundY, height++);
-                children[3].parent = this;
-                isLeaf = false;
+                Children[0] = new QTNode<TKey>(LowerBoundX, LowerBoundY, UpperBoundX/2d, UpperBoundY/2d, Height++);
+                Children[0].Parent = this;
+                Children[1] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY, UpperBoundX, UpperBoundY/2d, Height++);
+                Children[1].Parent = this;
+                Children[2] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY/2d, UpperBoundX, UpperBoundY, Height++);
+                Children[2].Parent = this;
+                Children[3] = new QTNode<TKey>(LowerBoundX, UpperBoundY/2d, UpperBoundX/2d, UpperBoundY, Height++);
+                Children[3].Parent = this;
+                IsLeaf = false;
                 return true;
             } else
             {
@@ -51,18 +65,18 @@ namespace AuS_QuadTree.QuadTreeFolder
         {
             if (HasSons())
             {
-                for(int i = 0; i < children.Length; i++)
+                for(int i = 0; i < Children.Length; i++)
                 {
-                    if (!children[i].isLeaf || children[i].records.Count > 0 || children[i].doesntFitInSon.Count > 0)
+                    if (!Children[i].IsLeaf || Children[i].Records.Count > 0 || Children[i].DoesntFitInSon.Count > 0)
                     {
                         return false;
                     }
                 }
-                for (int i = 0; i < children.Length; i++)
+                for (int i = 0; i < Children.Length; i++)
                 {
-                    children[i] = null;
+                    Children[i] = null;
                 }
-                isLeaf = true;
+                IsLeaf = true;
                 return true;
             }
             else
@@ -73,9 +87,9 @@ namespace AuS_QuadTree.QuadTreeFolder
 
         public bool HasSons()
         {
-            for(int i = 0; i < children.Length; i++)
+            for(int i = 0; i < Children.Length; i++)
             {
-                if (children[i] == null)
+                if (Children[i] == null)
                 {
                     return false;
                 }

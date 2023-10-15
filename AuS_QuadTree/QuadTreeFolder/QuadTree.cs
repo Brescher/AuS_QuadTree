@@ -25,5 +25,40 @@ namespace AuS_QuadTree.QuadTreeFolder
             int result = key.CompareTo(node);
             return true;
         }
+
+
+        private bool SonExists(QTNode<TKey> node, TKey key)
+        {
+            bool allocatedSons = false;
+            if(node.IsLeaf)
+            {
+                node.AllocateSons();
+                allocatedSons = true;
+            }
+            foreach (QTNode<TKey> son in node.Children)
+            {
+                if (key.CompareTo(son) == 1)
+                {
+                    return true;
+                }
+            }
+            if(allocatedSons)
+            {
+                node.DeallocateSons();
+            }
+            return false;
+
+        }
+        private QTNode<TKey> FindSonNode(QTNode<TKey> node, TKey key)
+        {
+            foreach (QTNode<TKey> son in node.Children)
+            {
+                if (key.CompareTo(son) == 1)
+                {
+                    return son;
+                }
+            }
+            return null;
+        }
     }
 }

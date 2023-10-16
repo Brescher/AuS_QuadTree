@@ -47,13 +47,13 @@ namespace AuS_QuadTree.QuadTreeFolder
             if (!HasSons())
             {
                 int newHeight = Height + 1;
-                Children[0] = new QTNode<TKey>(LowerBoundX, LowerBoundY, UpperBoundX/2d, UpperBoundY/2d, newHeight);
+                Children[0] = new QTNode<TKey>((double)LowerBoundX, (double)LowerBoundY, (double)((UpperBoundX - LowerBoundX) /2d) + LowerBoundX, (double)((UpperBoundY - LowerBoundY) / 2d) + LowerBoundY, newHeight);
                 Children[0].Parent = this;
-                Children[1] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY, UpperBoundX, UpperBoundY/2d, newHeight);
+                Children[1] = new QTNode<TKey>((double)((UpperBoundX - LowerBoundX) / 2d) + LowerBoundX, (double)LowerBoundY, (double)UpperBoundX, (double)((UpperBoundY - LowerBoundY) / 2d) + LowerBoundY, newHeight);
                 Children[1].Parent = this;
-                Children[2] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY/2d, UpperBoundX, UpperBoundY, newHeight);
+                Children[2] = new QTNode<TKey>((double)((UpperBoundX - LowerBoundX) / 2d) + LowerBoundX, (double)((UpperBoundY - LowerBoundY) / 2d) + LowerBoundY, (double)UpperBoundX, (double)UpperBoundY, newHeight);
                 Children[2].Parent = this;
-                Children[3] = new QTNode<TKey>(LowerBoundX, UpperBoundY/2d, UpperBoundX/2d, UpperBoundY, newHeight);
+                Children[3] = new QTNode<TKey>((double)LowerBoundX, (double)((UpperBoundY - LowerBoundY) / 2d) + LowerBoundY, (double)((UpperBoundX - LowerBoundX) / 2d) + LowerBoundX, (double)UpperBoundY, newHeight);
                 Children[3].Parent = this;
                 IsLeaf = false;
                 return true;

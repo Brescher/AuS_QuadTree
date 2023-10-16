@@ -22,16 +22,16 @@ namespace AuS_QuadTree
     {
         static void Main(string[] args)
         {
-            GPS gps1 = new GPS('N', 'W', 7, 7);
-            GPS gps2 = new GPS('N', 'W', 13, 13);
-            GPS gps3 = new GPS('N', 'W', 11, 11);
-            GPS gps4 = new GPS('N', 'W', 20, 20);
-            GPS gps5 = new GPS('N', 'W', 55, 55);
-            GPS gps6 = new GPS('N', 'W', 70, 70);
-            GPS gps7 = new GPS('N', 'W', 89, 92);
-            GPS gps8 = new GPS('N', 'W', 95, 98);
-            GPS gps9 = new GPS('N', 'W', 44, 44);
-            GPS gps10 = new GPS('N', 'W', 55, 55);
+            GPS gps1 = new GPS('N', 'W', 7d, 7d);
+            GPS gps2 = new GPS('N', 'W', 13d, 13d);
+            GPS gps3 = new GPS('N', 'W', 11d, 11d);
+            GPS gps4 = new GPS('N', 'W', 20d, 20d);
+            GPS gps5 = new GPS('N', 'W', 55d, 55d);
+            GPS gps6 = new GPS('N', 'W', 70d, 70d);
+            GPS gps7 = new GPS('N', 'W', 89d, 92d);
+            GPS gps8 = new GPS('N', 'W', 95d, 98d);
+            GPS gps9 = new GPS('N', 'W', 44d, 44d);
+            GPS gps10 = new GPS('N', 'W', 55d, 55d);
             Parcel p1 = new Parcel(1, "parcela 1", gps1, gps2);
             Parcel p2 = new Parcel(2, "parcela 2", gps3, gps4);
             Parcel p3 = new Parcel(3, "parcela 3", gps5, gps6);
@@ -39,8 +39,8 @@ namespace AuS_QuadTree
             Parcel p5 = new Parcel(5, "parcela 5", gps9, gps10);
 
             QuadTree<Parcel> tree = new QuadTree<Parcel>(100d, 100d, 10);
-            tree.Insert(p1);
-            tree.Insert(p2);
+            //tree.Insert(p1);
+            //tree.Insert(p2);
             tree.Insert(p3);
             tree.Insert(p4);
             tree.Insert(p5);

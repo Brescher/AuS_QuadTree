@@ -46,13 +46,14 @@ namespace AuS_QuadTree.QuadTreeFolder
         {
             if (!HasSons())
             {
-                Children[0] = new QTNode<TKey>(LowerBoundX, LowerBoundY, UpperBoundX/2d, UpperBoundY/2d, Height++);
+                int newHeight = Height + 1;
+                Children[0] = new QTNode<TKey>(LowerBoundX, LowerBoundY, UpperBoundX/2d, UpperBoundY/2d, newHeight);
                 Children[0].Parent = this;
-                Children[1] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY, UpperBoundX, UpperBoundY/2d, Height++);
+                Children[1] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY, UpperBoundX, UpperBoundY/2d, newHeight);
                 Children[1].Parent = this;
-                Children[2] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY/2d, UpperBoundX, UpperBoundY, Height++);
+                Children[2] = new QTNode<TKey>(UpperBoundX/2d, UpperBoundY/2d, UpperBoundX, UpperBoundY, newHeight);
                 Children[2].Parent = this;
-                Children[3] = new QTNode<TKey>(LowerBoundX, UpperBoundY/2d, UpperBoundX/2d, UpperBoundY, Height++);
+                Children[3] = new QTNode<TKey>(LowerBoundX, UpperBoundY/2d, UpperBoundX/2d, UpperBoundY, newHeight);
                 Children[3].Parent = this;
                 IsLeaf = false;
                 return true;

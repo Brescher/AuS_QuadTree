@@ -9,21 +9,21 @@ namespace AuS_QuadTree.Data
     internal class GPS
     {       //sirka - x    dlzka - y
         char latitude, longitude;
-        double latitudeAccuracy, longitudeAccuracy;
+        double x, y;
 
         #region properties
         public char Latitude { get => latitude; set => latitude = value; }
         public char Longitude { get => longitude; set => longitude = value; }
-        public double LatitudeAccuracy { get => latitudeAccuracy; set => latitudeAccuracy = value; }
-        public double LongitudeAccuracy { get => longitudeAccuracy; set => longitudeAccuracy = value; }
+        public double X { get => x; set => x = value; }
+        public double Y { get => y; set => y = value; }
         #endregion
 
         public GPS(char latitude, char longitude, double latitudeAccuracy, double longitudeAccuracy)
         {
             this.Latitude = latitude;
             this.Longitude = longitude;
-            this.LatitudeAccuracy = latitudeAccuracy;
-            this.LongitudeAccuracy = longitudeAccuracy;
+            this.X = latitudeAccuracy;
+            this.Y = longitudeAccuracy;
         }
         
     }

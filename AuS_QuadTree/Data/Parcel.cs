@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AuS_QuadTree.Data
 {
@@ -30,17 +31,17 @@ namespace AuS_QuadTree.Data
             this.UpperBound = upperBound_;
             this.LowerBound = lowerBound_;
 
-            if (LowerBound.LatitudeAccuracy > UpperBound.LatitudeAccuracy)
+            if (LowerBound.X > UpperBound.X)
             {
-                double hlp = UpperBound.LatitudeAccuracy;
-                UpperBound.LatitudeAccuracy = LowerBound.LatitudeAccuracy;
-                LowerBound.LatitudeAccuracy = hlp;
+                double hlp = UpperBound.X;
+                UpperBound.X = LowerBound.X;
+                LowerBound.X = hlp;
             }
-            if (LowerBound.LongitudeAccuracy > UpperBound.LongitudeAccuracy)
+            if (LowerBound.Y > UpperBound.Y)
             {
-                double hlp = UpperBound.LongitudeAccuracy;
-                UpperBound.LongitudeAccuracy = LowerBound.LongitudeAccuracy;
-                LowerBound.LongitudeAccuracy = hlp;
+                double hlp = UpperBound.Y;
+                UpperBound.Y = LowerBound.Y;
+                LowerBound.Y = hlp;
             }
         }
 
@@ -48,10 +49,10 @@ namespace AuS_QuadTree.Data
         {
             if (node_ == null) {
                 return 0;
-            }else if((LowerBound.LatitudeAccuracy > node_.LowerBoundX && LowerBound.LatitudeAccuracy < node_.UpperBoundX) &&
-               (LowerBound.LongitudeAccuracy > node_.LowerBoundY && LowerBound.LongitudeAccuracy < node_.UpperBoundY) &&
-               (UpperBound.LatitudeAccuracy > node_.LowerBoundX && UpperBound.LatitudeAccuracy < node_.UpperBoundX) &&
-               (UpperBound.LongitudeAccuracy > node_.LowerBoundY && UpperBound.LongitudeAccuracy < node_.UpperBoundY))
+            }else if((LowerBound.X > node_.LowerBoundX && LowerBound.X < node_.UpperBoundX) &&
+               (LowerBound.Y > node_.LowerBoundY && LowerBound.Y < node_.UpperBoundY) &&
+               (UpperBound.X > node_.LowerBoundX && UpperBound.X < node_.UpperBoundX) &&
+               (UpperBound.Y > node_.LowerBoundY && UpperBound.Y < node_.UpperBoundY))
             {
                 return 1;
             } else
@@ -60,5 +61,17 @@ namespace AuS_QuadTree.Data
             }
         }
 
+        public int CompareIntersect(double _x1, double _y1, double _x2, double _y2)
+        {
+            if ((LowerBound.X < _x1 && UpperBound.X > _x1 && LowerBound.Y < _y1 && UpperBound.Y > _y1) ||
+              (LowerBound.X < _x2 && UpperBound.X > _x2 && LowerBound.Y < _y2 && UpperBound.Y > _y2))
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
     }
 }

@@ -108,12 +108,11 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
             
         }
-
-
+        
         private bool SonExists(QTNode<TKey> node, TKey key)
         {
             bool allocatedSons = false;
-            if(node.IsLeaf)
+            if (node.IsLeaf)
             {
                 node.AllocateSons();
                 allocatedSons = true;
@@ -125,13 +124,14 @@ namespace AuS_QuadTree.QuadTreeFolder
                     return true;
                 }
             }
-            if(allocatedSons)
+            if (allocatedSons)
             {
                 node.DeallocateSons();
             }
             return false;
 
         }
+
         private QTNode<TKey> FindSonNode(QTNode<TKey> node, TKey key)
         {
             foreach (QTNode<TKey> son in node.Children)
@@ -143,5 +143,95 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
             return null;
         }
+
+        public List<TKey> Find(double _x1, double _y1, double _x2, double _y2)
+        {
+            double x1, y1, x2, y2;
+            if (_x1 > _x2)
+            {
+                x1 = _x2;
+                x2 = _x1;
+            } else
+            {
+                x1 = _x1;
+                x2 = _x2;
+            }
+            if (_y1 > _y2)
+            {
+                y1 = _y2;
+                y2 = _y1;
+            } else
+            {
+                y1 = _y1;
+                y2 = _y2;
+            }
+            List<TKey> list = new List<TKey>();
+            Queue<QTNode<TKey>> nodes = new Queue<QTNode<TKey>>();
+            nodes.Enqueue(root);
+            QTNode<TKey> node;
+            while (nodes.Count > 0)
+            {
+                node = nodes.Dequeue();
+                if(CompareCoordinatesNode(node, x1, y1, x2, y2))
+                {
+                    if(!node.IsLeaf)
+                    {
+                        for(int i = 0; i < node.Children.Length; i++)
+                        {
+                            nodes.Enqueue(node.Children[i]);
+                        }
+                    }
+                    if(node.Records.Count > 0)
+                    {
+                        foreach(TKey rec in node.Records)
+                        {
+                            if(rec.CompareIntersect(x1, y1, x2, y2) == 1)
+                            {
+                                list.Add(rec);
+                            }
+                        }
+                    }
+                    if (node.DoesntFitInSon.Count > 0)
+                    {
+                        foreach (TKey rec in node.DoesntFitInSon)
+                        {
+                            if (rec.CompareIntersect(x1, y1, x2, y2) == 1)
+                            {
+                                list.Add(rec);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
+        {
+            if((node.LowerBoundX < x1 && node.UpperBoundX > x1 && node.LowerBoundY < y1 && node.UpperBoundY > y1) ||
+               (node.LowerBoundX < x2 && node.UpperBoundX > x2 && node.LowerBoundY < y2 && node.UpperBoundY > y2))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CompareCoordinatesData(TKey data, double x1, double y1, double x2, double y2)
+        {
+            if (data.CompareIntersect(x1, y1, x2, y2) == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
     }
 }

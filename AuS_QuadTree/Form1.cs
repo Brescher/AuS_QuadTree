@@ -36,7 +36,7 @@ namespace AuS_QuadTree
             tree.Insert(p4);
             tree.Insert(p5);
             List<Parcel> list = new List<Parcel>();
-            list = tree.Find(50, 50, 60, 60);
+            list = tree.Find(0, 0, 100, 100);
             string text = "";
             foreach (Parcel p in list)
             {

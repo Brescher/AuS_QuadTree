@@ -206,11 +206,13 @@ namespace AuS_QuadTree.QuadTreeFolder
 
             return list;
         }
-
+        //porovnat nie len rohy, ale ci sa len pretina hladana oblast s nodom alebo TKey
         public bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
         {
-            if((node.LowerBoundX < x1 && node.UpperBoundX > x1 && node.LowerBoundY < y1 && node.UpperBoundY > y1) ||
-               (node.LowerBoundX < x2 && node.UpperBoundX > x2 && node.LowerBoundY < y2 && node.UpperBoundY > y2))
+            if(((node.LowerBoundX <= x1 && node.UpperBoundX >= x1) || (node.LowerBoundX <= x2 && node.UpperBoundX >= x2) || 
+               (node.LowerBoundX >= x1 && node.LowerBoundX <= x2) || (node.UpperBoundX >= x1 && node.UpperBoundX <= x2)) &&
+               ((node.LowerBoundY <= y1 && node.UpperBoundY >= y1) || (node.LowerBoundY <= y2 && node.UpperBoundY >= y2) ||
+               (node.LowerBoundY >= y1 && node.LowerBoundY <= y2) || (node.UpperBoundY >= y1 && node.UpperBoundY <= y1)))
             {
                 return true;
             }

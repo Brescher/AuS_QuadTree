@@ -63,9 +63,11 @@ namespace AuS_QuadTree.Data
 
         public int CompareIntersect(double _x1, double _y1, double _x2, double _y2)
         {
-            if ((LowerBound.X < _x1 && UpperBound.X > _x1 && LowerBound.Y < _y1 && UpperBound.Y > _y1) ||
-              (LowerBound.X < _x2 && UpperBound.X > _x2 && LowerBound.Y < _y2 && UpperBound.Y > _y2))
-            {
+            if (((LowerBound.X <= _x1 && UpperBound.X >= _x1) || (LowerBound.X <= _x2 && UpperBound.X >= _x2) ||
+               (LowerBound.X >= _x1 && LowerBound.X <= _x2) || (UpperBound.X >= _x1 && UpperBound.X <= _x2)) &&
+               ((LowerBound.Y <= _y1 && UpperBound.Y >= _y1) || (LowerBound.Y <= _y2 && UpperBound.Y >= _y2) ||
+               (LowerBound.Y >= _y1 && LowerBound.Y <= _y2) || (UpperBound.Y >= _y1 && UpperBound.Y <= _y1)))
+            { 
                 return 1;
             }
             else

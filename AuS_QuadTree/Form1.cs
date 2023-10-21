@@ -13,8 +13,8 @@ namespace AuS_QuadTree
 
         public void Run()
         {
-            GPS gps1 = new GPS('N', 'W', 7d, 7d);
-            GPS gps2 = new GPS('N', 'W', 13d, 13d);
+            GPS gps1 = new GPS('N', 'W', 10d, 10d);
+            GPS gps2 = new GPS('N', 'W', 90d, 90d);
             GPS gps3 = new GPS('N', 'W', 11d, 11d);
             GPS gps4 = new GPS('N', 'W', 20d, 20d);
             GPS gps5 = new GPS('N', 'W', 55d, 55d);
@@ -35,6 +35,7 @@ namespace AuS_QuadTree
             tree.Insert(p3);
             tree.Insert(p4);
             tree.Insert(p5);
+            tree.Delete(p1);
             List<Parcel> list = new List<Parcel>();
             list = tree.Find(0, 0, 100, 100);
             string text = "";

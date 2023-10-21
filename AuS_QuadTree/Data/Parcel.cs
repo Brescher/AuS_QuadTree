@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace AuS_QuadTree.Data
 {
-    internal class Parcel : IQTData<Parcel>
+    internal class Parcel : IQTData<Parcel>, IEquatable<Parcel>
     {
         int index;
         string description;
@@ -74,6 +74,22 @@ namespace AuS_QuadTree.Data
             {
                 return -1;
             }
+        }
+
+        public bool Equals(Parcel? other)
+        {
+            if (other == null) 
+            {
+                return false;
+            }
+            else if((other.index == index && other.Description.Equals(description) && 
+                      other.LowerBound.X == lowerBound.X && other.LowerBound.Y == lowerBound.Y &&
+                      other.UpperBound.X == upperBound.X && other.UpperBound.Y == upperBound.Y) ||
+                      ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return false;        
         }
     }
 }

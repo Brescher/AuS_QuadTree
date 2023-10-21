@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuS_QuadTree.Data
 {
-    internal class Estate : IQTData<Parcel>
+    internal class Estate : IQTData<Parcel>, IEquatable<Estate>
     {
         int index;
         string description;
@@ -77,6 +77,22 @@ namespace AuS_QuadTree.Data
             {
                 return -1;
             }
+        }
+
+        public bool Equals(Estate? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            else if ((other.index == index && other.Description.Equals(description) &&
+                      other.LowerBound.X == lowerBound.X && other.LowerBound.Y == lowerBound.Y &&
+                      other.UpperBound.X == upperBound.X && other.UpperBound.Y == upperBound.Y) ||
+                      ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

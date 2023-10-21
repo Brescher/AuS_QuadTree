@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
-    public class QuadTree<TKey> where TKey : IQTData<TKey>
+    public class QuadTree<TKey> where TKey : IQTData<TKey>, IEquatable<TKey>
     {
         QTNode<TKey> root;
         double maxX, maxY;
@@ -25,7 +25,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             MaxHeight = maxHeight_;
             Root = new QTNode<TKey>(0, 0, MaxX, MaxY, 1);
         }
-
+        //insert a metody pren
         public void Insert(TKey key)
         {
             QTNode<TKey> helpNode = Root;
@@ -43,7 +43,11 @@ namespace AuS_QuadTree.QuadTreeFolder
                 if(helpData == null )
                 {
                     throw new Exception("null data");
-                } 
+                }
+                else if (helpNode.Height == 1 && helpData.CompareTo(helpNode) == -1)
+                {
+                    throw new Exception("Data bigger than tree");
+                }
                 else if (helpNode.Height == MaxHeight)
                 {
                     switch (helpData.CompareTo(helpNode))
@@ -58,10 +62,6 @@ namespace AuS_QuadTree.QuadTreeFolder
                             throw new Exception("null data");
                             break;
                     }
-                }
-                else if(helpNode.Height == 1 && helpData.CompareTo(helpNode) == -1)
-                {
-                    throw new Exception("Data bigger than tree");
                 }
                 else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1 
                         && (helpNode.Records.Count == 0 && helpNode.DoesntFitInSon.Count == 0))
@@ -143,7 +143,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
             return null;
         }
-
+        //find a metody pren
         public List<TKey> Find(double _x1, double _y1, double _x2, double _y2)
         {
             double x1, y1, x2, y2;
@@ -206,7 +206,7 @@ namespace AuS_QuadTree.QuadTreeFolder
 
             return list;
         }
-        //porovnat nie len rohy, ale ci sa len pretina hladana oblast s nodom alebo TKey
+
         public bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
         {
             if(((node.LowerBoundX <= x1 && node.UpperBoundX >= x1) || (node.LowerBoundX <= x2 && node.UpperBoundX >= x2) || 
@@ -233,7 +233,45 @@ namespace AuS_QuadTree.QuadTreeFolder
                 return false;
             }
         }
-
+        //delete a metody prem
+        public bool Delete(TKey key)
+        {
+            QTNode<TKey> helpNode = Root;
+            TKey helpData = key;
+            Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();;
+            qNodes.Enqueue(helpNode);
+            bool itemDeleted = false;
+            while (qNodes.Count > 0)
+            {
+                helpNode = qNodes.Dequeue();
+                for(int i = 0; i < helpNode.Records.Count; i++)
+                {
+                    if (helpData.Equals(helpNode.Records[i]))
+                    {
+                        helpNode.Records.RemoveAt(i);
+                        itemDeleted = true;
+                        break;
+                    }
+                }
+                if (!itemDeleted)
+                {
+                    for (int i = 0; i < helpNode.DoesntFitInSon.Count; i++)
+                    {
+                        if (helpData.Equals(helpNode.DoesntFitInSon[i]))
+                        {
+                            helpNode.DoesntFitInSon.RemoveAt(i);
+                            itemDeleted = true;
+                            break;
+                        }
+                    }
+                }
+                if (itemDeleted)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 }

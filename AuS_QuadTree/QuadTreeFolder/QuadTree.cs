@@ -238,19 +238,22 @@ namespace AuS_QuadTree.QuadTreeFolder
         {
             QTNode<TKey> helpNode = Root;
             TKey helpData = key;
-            Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();;
+            Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
             qNodes.Enqueue(helpNode);
             bool itemDeleted = false;
             while (qNodes.Count > 0)
             {
                 helpNode = qNodes.Dequeue();
-                for(int i = 0; i < helpNode.Records.Count; i++)
+                if (!itemDeleted)
                 {
-                    if (helpData.Equals(helpNode.Records[i]))
+                    for (int i = 0; i < helpNode.Records.Count; i++)
                     {
-                        helpNode.Records.RemoveAt(i);
-                        itemDeleted = true;
-                        break;
+                        if (helpData.Equals(helpNode.Records[i]))
+                        {
+                            helpNode.Records.RemoveAt(i);
+                            itemDeleted = true;
+                            break;
+                        }
                     }
                 }
                 if (!itemDeleted)
@@ -267,7 +270,46 @@ namespace AuS_QuadTree.QuadTreeFolder
                 }
                 if (itemDeleted)
                 {
+                    //preskumat synov ci maju prvky a tak
+
+                    Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
+                    collapsingNodes.Enqueue(helpNode);
+                    while (collapsingNodes.Count > 0)
+                    {
+                        helpNode = collapsingNodes.Dequeue();
+                        if (helpNode.IsLeaf)
+                        {
+                            if (helpNode.CheckNumberOfItemsAsSon())
+                            {
+                                //pokracovat tuna
+                            } 
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                    }
                     return true;
+                } else
+                {
+                    //najdi syna v ktorom moze byt item
+                    if(helpNode.IsLeaf)
+                    {
+                        return false;
+                    } 
+                    else
+                    {
+                        helpNode = FindSonNode(helpNode, helpData);
+                        if (helpNode != null)
+                        {
+                            qNodes.Enqueue(helpNode);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        
+                    }
                 }
             }
             return false;

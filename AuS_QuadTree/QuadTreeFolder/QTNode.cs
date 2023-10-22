@@ -98,5 +98,64 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
             return true;
         }
+
+        public bool CheckNumberOfItemsAsSon()
+        {
+            int numberOfItems = 0;
+            numberOfItems += parent.records.Count;
+            numberOfItems += parent.doesntFitInSon.Count;
+            for(int i = 0; i < parent.Children.Length; i++)
+            {
+                numberOfItems += parent.Children[i].records.Count;
+                numberOfItems += parent.Children[i].doesntFitInSon.Count;
+            }
+
+            if(numberOfItems > 1)
+            {
+                return false;
+            } else
+            {
+                return true;
+            }
+        }
+
+        public bool CheckNumberOfItemsAsParent()
+        {
+            int numberOfItems = 0;
+            numberOfItems += records.Count;
+            numberOfItems += doesntFitInSon.Count;
+            for (int i = 0; i < Children.Length; i++)
+            {
+                numberOfItems += Children[i].records.Count;
+                numberOfItems += Children[i].doesntFitInSon.Count;
+            }
+
+            if (numberOfItems > 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public void ReallocateDataAndDeallocateSons()
+        {
+            for(int i = 0; i < parent.Children.Length;i++)
+            {
+                foreach(TKey item in parent.Children[i].records)
+                {
+                    parent.records.Add(item);
+                }
+                foreach (TKey item in parent.Children[i].DoesntFitInSon)
+                {
+                    parent.records.Add(item);
+                }
+                parent.Children[i].Records.Clear();
+                parent.Children[i].DoesntFitInSon.Clear();
+            }
+            parent.DeallocateSons();
+        }
     }
 }

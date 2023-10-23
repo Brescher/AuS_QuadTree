@@ -45,6 +45,7 @@ namespace AuS_QuadTree
                 text += $"this is result {p.Description}\n";
                 
             }
+            text += $"\n\r Tree health is {tree.GetTreeHealth()}";
             textBox1.Text = text;
         }
     }

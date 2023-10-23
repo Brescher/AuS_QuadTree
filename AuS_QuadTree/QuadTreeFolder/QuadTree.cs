@@ -233,7 +233,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                 return false;
             }
         }
-        //delete a metody prem
+        //delete a metody pren
         public bool Delete(TKey key)
         {
             QTNode<TKey> helpNode = Root;
@@ -351,6 +351,58 @@ namespace AuS_QuadTree.QuadTreeFolder
                     throw new Exception("More items in nodes, do not collapse tree!");
                 }
             }
+        }
+
+        private List<QTNode<TKey>> LevelOrder(QTNode<TKey> node)
+        {
+            List<QTNode<TKey>> levelOrder = new List<QTNode<TKey>>();
+            Queue<QTNode<TKey>> queue = new Queue<QTNode<TKey>>();
+            QTNode<TKey> helpNode = null;
+            queue.Enqueue(node);
+            while (queue.Count > 0)
+            {
+                helpNode = queue.Dequeue();
+                levelOrder.Add(helpNode);
+                if (!helpNode.IsLeaf)
+                {
+                    foreach (QTNode<TKey> son in helpNode.Children)
+                    {
+                        queue.Enqueue(son);
+                    }
+                }
+            }
+            return levelOrder;
+        }
+
+        public double GetTreeHealth()
+        {
+            double max = 0, min = int.MaxValue;
+            if (root.IsLeaf)
+            {
+                return 1;
+            } else
+            {
+                List<QTNode<TKey>>[] qTNodes = new List<QTNode<TKey>>[4];
+                qTNodes[0] = LevelOrder(root.Children[0]);
+                qTNodes[1] = LevelOrder(root.Children[1]);
+                qTNodes[2] = LevelOrder(root.Children[2]);
+                qTNodes[3] = LevelOrder(root.Children[3]);
+
+                for(int i = 0; i < qTNodes.Length; i++)
+                {
+                    List<QTNode<TKey>> list = qTNodes[i];
+                    if(max < list[list.Count - 1].Height)
+                    {
+                        max = list[list.Count - 1].Height;
+                    }
+                    if(min > list[list.Count - 1].Height)
+                    {
+                        min = list[list.Count - 1].Height;
+                    }
+                }
+
+            }
+            return min/max;
         }
     }
 }

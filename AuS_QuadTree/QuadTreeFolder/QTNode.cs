@@ -99,15 +99,27 @@ namespace AuS_QuadTree.QuadTreeFolder
             return true;
         }
 
+        public int GetNumberOfItems()
+        {
+            return Records.Count + DoesntFitInSon.Count;
+        }
+
         public bool CheckNumberOfItemsAsSon()
         {
             int numberOfItems = 0;
             numberOfItems += parent.records.Count;
             numberOfItems += parent.doesntFitInSon.Count;
-            for(int i = 0; i < parent.Children.Length; i++)
+            for (int i = 0; i < parent.Children.Length; i++)
             {
-                numberOfItems += parent.Children[i].records.Count;
-                numberOfItems += parent.Children[i].doesntFitInSon.Count;
+                if (parent.Children[i].IsLeaf)
+                {
+                    numberOfItems += parent.Children[i].records.Count;
+                    numberOfItems += parent.Children[i].doesntFitInSon.Count;
+                } else
+                {
+                    return false;
+                }
+                
             }
 
             if(numberOfItems > 1)
@@ -126,9 +138,15 @@ namespace AuS_QuadTree.QuadTreeFolder
             numberOfItems += doesntFitInSon.Count;
             for (int i = 0; i < Children.Length; i++)
             {
-                numberOfItems += Children[i].records.Count;
-                numberOfItems += Children[i].doesntFitInSon.Count;
-            }
+                if (Children[i].IsLeaf)
+                {
+                    numberOfItems += Children[i].records.Count;
+                    numberOfItems += Children[i].doesntFitInSon.Count;
+                } else
+                {
+                    return false;
+                }
+        }
 
             if (numberOfItems > 1)
             {

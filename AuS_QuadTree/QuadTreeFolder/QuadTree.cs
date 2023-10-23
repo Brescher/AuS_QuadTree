@@ -256,6 +256,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                         }
                     }
                 }
+
                 if (!itemDeleted)
                 {
                     for (int i = 0; i < helpNode.DoesntFitInSon.Count; i++)
@@ -268,35 +269,14 @@ namespace AuS_QuadTree.QuadTreeFolder
                         }
                     }
                 }
-                if (itemDeleted)
-                {
-                    //preskumat synov ci maju prvky a tak
 
-                    Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
-                    collapsingNodes.Enqueue(helpNode);
-                    while (collapsingNodes.Count > 0)
-                    {
-                        helpNode = collapsingNodes.Dequeue();
-                        if (helpNode.IsLeaf)
-                        {
-                            if (helpNode.CheckNumberOfItemsAsSon())
-                            {
-                                //pokracovat tuna
-                            } 
-                            else
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    return true;
-                } else
+                if(!itemDeleted)
                 {
                     //najdi syna v ktorom moze byt item
-                    if(helpNode.IsLeaf)
+                    if (helpNode.IsLeaf)
                     {
                         return false;
-                    } 
+                    }
                     else
                     {
                         helpNode = FindSonNode(helpNode, helpData);
@@ -308,12 +288,69 @@ namespace AuS_QuadTree.QuadTreeFolder
                         {
                             return false;
                         }
-                        
                     }
                 }
             }
-            return false;
+
+            if (itemDeleted)
+            {
+                //preskumat synov ci maju prvky a tak
+                Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
+                collapsingNodes.Enqueue(helpNode);
+                while (collapsingNodes.Count > 0)
+                {
+                    helpNode = collapsingNodes.Dequeue();
+                    if (helpNode.IsLeaf)
+                    {
+                        if (helpNode.Parent != null)
+                        {
+                            if (helpNode.CheckNumberOfItemsAsSon())
+                            {
+                                ReallocateData(helpNode.Parent);
+                                collapsingNodes.Enqueue(helpNode.Parent);
+                                helpNode.Parent.DeallocateSons();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (helpNode.CheckNumberOfItemsAsParent())
+                        {
+                            ReallocateData(helpNode);
+                            collapsingNodes.Enqueue(helpNode);
+                            helpNode.DeallocateSons();
+                        }
+                    }
+                }
+                return true;
+            } else
+            {
+                return false;
+            }
         }
 
+        private void ReallocateData(QTNode<TKey> helpNode)
+        {
+            foreach (QTNode<TKey> item in helpNode.Children)
+            {
+                if (item.GetNumberOfItems() == 1)
+                {
+                    foreach (TKey data in item.Records)
+                    {
+                        helpNode.Records.Add(data);
+                    }
+                    foreach (TKey data in item.DoesntFitInSon)
+                    {
+                        helpNode.Records.Add(data);
+                    }
+                    item.Records.Clear();
+                    item.DoesntFitInSon.Clear();
+                }
+                else if (item.GetNumberOfItems() > 1)
+                {
+                    throw new Exception("More items in nodes, do not collapse tree!");
+                }
+            }
+        }
     }
 }

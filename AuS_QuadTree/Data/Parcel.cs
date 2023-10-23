@@ -82,10 +82,10 @@ namespace AuS_QuadTree.Data
             {
                 return false;
             }
-            else if((other.index == index && other.Description.Equals(description) && 
-                      other.LowerBound.X == lowerBound.X && other.LowerBound.Y == lowerBound.Y &&
-                      other.UpperBound.X == upperBound.X && other.UpperBound.Y == upperBound.Y) ||
-                      ReferenceEquals(this, other))
+            else if(ReferenceEquals(this, other) || 
+                   (other.index == index && other.Description.Equals(description) && 
+                    other.LowerBound.X == lowerBound.X && other.LowerBound.Y == lowerBound.Y &&
+                    other.UpperBound.X == upperBound.X && other.UpperBound.Y == upperBound.Y))
             {
                 return true;
             }

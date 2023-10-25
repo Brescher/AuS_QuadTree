@@ -10,12 +10,14 @@ namespace AuS_QuadTree.Tester
 {
     public class TestCase
     {
-        QuadTree<Parcel> quadTree = new QuadTree<Parcel>(10000, 10000, 50);
+        QuadTree<Parcel> tree;
         List<Parcel> list = new List<Parcel>();
+
+        public QuadTree<Parcel> Tree { get => tree; set => tree = value; }
 
         public TestCase()
         {
-            
+            Tree = new QuadTree<Parcel>(10000, 10000, 50);
         }
 
         public bool TestInsert()
@@ -27,8 +29,8 @@ namespace AuS_QuadTree.Tester
 
             for(int i = 0; i < 10000; i++)
             {
-                double X1 = randomGPS1.NextDouble() * (quadTree.MaxX - 250);
-                double Y1 = randomGPS2.NextDouble() * (quadTree.MaxY - 250);
+                double X1 = randomGPS1.NextDouble() * (Tree.MaxX - 250);
+                double Y1 = randomGPS2.NextDouble() * (Tree.MaxY - 250);
                 double increaseX = increaseXGPS.NextDouble() * 250;
                 double increaseY = increaseYGPS.NextDouble() * 250;
                 double X2 = X1 + increaseX;
@@ -37,9 +39,9 @@ namespace AuS_QuadTree.Tester
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela { i }", GPS1, GPS2);
                 list.Add(parcela);
-                quadTree.Insert(parcela);
+                Tree.Insert(parcela);
             }
-            if(quadTree.GetNumberOfItemsInTree() == list.Count)
+            if(Tree.GetNumberOfItemsInTree() == list.Count)
             {
                 return true;
             }else
@@ -57,9 +59,9 @@ namespace AuS_QuadTree.Tester
             for (int i = 0; i < numberOfItemsToDelete; i++)
             {
                 itemToDelete = genItemToDelete.Next(list.Count - 1);
-                quadTree.Delete(list[itemToDelete]);
+                Tree.Delete(list[itemToDelete]);
                 list.RemoveAt(itemToDelete);
-                if (quadTree.GetNumberOfItemsInTree() != list.Count)
+                if (Tree.GetNumberOfItemsInTree() != list.Count)
                 {
                     return false;
                 }
@@ -67,10 +69,10 @@ namespace AuS_QuadTree.Tester
             //int count = list.Count;
             //for (int i = 0; i < count; i++)
             //{
-            //    quadTree.Delete(list[0]);
+            //    Tree.Delete(list[0]);
             //    list.RemoveAt(0);
             //}
-            if (quadTree.GetNumberOfItemsInTree() == list.Count)
+            if (Tree.GetNumberOfItemsInTree() == list.Count)
             {
                 return true;
             }
@@ -101,8 +103,8 @@ namespace AuS_QuadTree.Tester
 
             for (int i = 0; i < 1000; i++)
             {
-                X1 = randomGPS1.NextDouble() * (quadTree.MaxX - 250);
-                Y1 = randomGPS2.NextDouble() * (quadTree.MaxY - 250);
+                X1 = randomGPS1.NextDouble() * (Tree.MaxX - 250);
+                Y1 = randomGPS2.NextDouble() * (Tree.MaxY - 250);
                 increaseX = increaseXGPS.NextDouble() * 250;
                 increaseY = increaseYGPS.NextDouble() * 250;
                 X2 = X1 + increaseX;
@@ -111,7 +113,7 @@ namespace AuS_QuadTree.Tester
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
                 list.Add(parcela);
-                quadTree.Insert(parcela);
+                Tree.Insert(parcela);
             }
 
             double opearation;
@@ -121,8 +123,8 @@ namespace AuS_QuadTree.Tester
                 if(opearation < 0.5)
                 {
                     //insert
-                    X1 = randomGPS1.NextDouble() * (quadTree.MaxX - 250);
-                    Y1 = randomGPS2.NextDouble() * (quadTree.MaxY - 250);
+                    X1 = randomGPS1.NextDouble() * (Tree.MaxX - 250);
+                    Y1 = randomGPS2.NextDouble() * (Tree.MaxY - 250);
                     increaseX = increaseXGPS.NextDouble() * 250;
                     increaseY = increaseYGPS.NextDouble() * 250;
                     X2 = X1 + increaseX;
@@ -131,24 +133,24 @@ namespace AuS_QuadTree.Tester
                     GPS GPS2 = new GPS('A', 'A', X2, Y2);
                     Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
                     list.Add(parcela);
-                    quadTree.Insert(parcela);
-                    if (quadTree.GetNumberOfItemsInTree() != list.Count)
+                    Tree.Insert(parcela);
+                    if (Tree.GetNumberOfItemsInTree() != list.Count)
                     {
                         return false;
                     }
                 } else
                 {
                     itemToDelete = genItemToDelete.Next(list.Count - 1);
-                    quadTree.Delete(list[itemToDelete]);
+                    Tree.Delete(list[itemToDelete]);
                     list.RemoveAt(itemToDelete);
-                    if (quadTree.GetNumberOfItemsInTree() != list.Count)
+                    if (Tree.GetNumberOfItemsInTree() != list.Count)
                     {
                         return false;
                     }
                 }
             }
 
-            if (quadTree.GetNumberOfItemsInTree() != list.Count)
+            if (Tree.GetNumberOfItemsInTree() != list.Count)
             {
                 return false;
             } else

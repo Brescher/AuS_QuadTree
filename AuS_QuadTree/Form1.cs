@@ -48,6 +48,12 @@ namespace AuS_QuadTree
                 text += "\r\nNesedi pocet prvkov.";
             }
             textBox1.Text = text;
+
+            List<Parcel> list = new List<Parcel>();
+            list = test.Tree.Find(0, 0, 10000, 10000);
+            text += test.Tree.GetNumberOfItemsInTree().ToString();
+            text += $"\r\n {list.Count} ";
+            textBox1.Text = text;
         }
         public void Run()
         {

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace AuS_QuadTree.Data
 {
-    internal class Parcel : IQTData<Parcel>, IEquatable<Parcel>
+    public class Parcel : IQTData<Parcel>, IEquatable<Parcel>
     {
         int index;
         string description;

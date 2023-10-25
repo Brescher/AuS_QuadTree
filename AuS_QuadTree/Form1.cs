@@ -9,11 +9,11 @@ namespace AuS_QuadTree
         public Form1()
         {
             InitializeComponent();
-            TestInsert();
+            Test();
         }
 
 
-        public void TestInsert()
+        public void TestInsertAndDelete()
         {
             TestCase test = new TestCase();
             string text = "";
@@ -31,6 +31,21 @@ namespace AuS_QuadTree
             } else
             {
                 text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
+            }
+            textBox1.Text = text;
+        }
+
+        public void Test()
+        {
+            TestCase test = new TestCase();
+            string text = "";
+            if (test.TestBoth())
+            {
+                text += "\r\nSedi pocet prvkov.";
+            }
+            else
+            {
+                text += "\r\nNesedi pocet prvkov.";
             }
             textBox1.Text = text;
         }

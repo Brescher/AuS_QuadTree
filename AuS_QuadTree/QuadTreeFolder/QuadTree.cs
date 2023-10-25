@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AuS_QuadTree.QuadTreeFolder
 {
@@ -403,6 +404,27 @@ namespace AuS_QuadTree.QuadTreeFolder
 
             }
             return min/max;
+        }
+
+        public int GetNumberOfItemsInTree()
+        {
+            int items = 0;
+            Queue<QTNode<TKey>> queue = new Queue<QTNode<TKey>>();
+            QTNode<TKey> helpNode = null;
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                helpNode = queue.Dequeue();
+                items += helpNode.GetNumberOfItems();
+                if (!helpNode.IsLeaf)
+                {
+                    foreach (QTNode<TKey> son in helpNode.Children)
+                    {
+                        queue.Enqueue(son);
+                    }
+                }
+            }
+            return items;
         }
     }
 }

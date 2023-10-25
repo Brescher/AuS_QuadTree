@@ -1,5 +1,6 @@
 using AuS_QuadTree.Data;
 using AuS_QuadTree.QuadTreeFolder;
+using AuS_QuadTree.Tester;
 
 namespace AuS_QuadTree
 {
@@ -8,9 +9,31 @@ namespace AuS_QuadTree
         public Form1()
         {
             InitializeComponent();
-            Run();
+            TestInsert();
         }
 
+
+        public void TestInsert()
+        {
+            TestCase test = new TestCase();
+            string text = "";
+            if (test.TestInsert())
+            {
+                text += "\r\nDo stromu sa vlozili vsetky prvky.";
+            } else
+            {
+                text += "\r\nDo stromu sa nevlozili vsetky prvky.";
+            }
+
+            if(test.TestDelete())
+            {
+                text += "\r\nVymazal sa pocet prvkov ktory sa mal";
+            } else
+            {
+                text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
+            }
+            textBox1.Text = text;
+        }
         public void Run()
         {
             GPS gps1 = new GPS('N', 'W', 26d, 26d);

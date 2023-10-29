@@ -439,6 +439,27 @@ namespace AuS_QuadTree.QuadTreeFolder
             return levelOrder;
         }
 
+        private Stack<QTNode<TKey>> LevelOrderStack(QTNode<TKey> node)
+        {
+            Stack<QTNode<TKey>> levelOrder = new Stack<QTNode<TKey>>();
+            Queue<QTNode<TKey>> queue = new Queue<QTNode<TKey>>();
+            QTNode<TKey> helpNode = null;
+            queue.Enqueue(node);
+            while (queue.Count > 0)
+            {
+                helpNode = queue.Dequeue();
+                levelOrder.Push(helpNode);
+                if (!helpNode.IsLeaf)
+                {
+                    foreach (QTNode<TKey> son in helpNode.Children)
+                    {
+                        queue.Enqueue(son);
+                    }
+                }
+            }
+            return levelOrder;
+        }
+
         public double GetTreeHealth()
         {
             double max = 0, min = int.MaxValue;
@@ -494,9 +515,9 @@ namespace AuS_QuadTree.QuadTreeFolder
         //zmena vysky stromu
         public bool ChangeHeight(int newHeight)
         {
-            List<QTNode<TKey>> nodes = LevelOrder(root);
-            
-            if(newHeight < 1)
+            Stack<QTNode<TKey>> nodes = LevelOrderStack(root);
+            QTNode<TKey> node = null;
+            if (newHeight < 1)
             {
                 return false;
             }
@@ -504,13 +525,14 @@ namespace AuS_QuadTree.QuadTreeFolder
             maxHeight = newHeight;
             if (newHeight < oldHeight)
             {
-                foreach (QTNode<TKey> item in nodes)
+                while(nodes.Count > 0)
                 {
-                    if (item.Height > maxHeight)
+                    node = nodes.Pop();
+                    if (node.Height > maxHeight)
                     {
-                        foreach (TKey key in item.Records.ToList<TKey>())
+                        foreach (TKey key in node.Records.ToList<TKey>())
                         {
-                            if (DeleteWithNodeFromRecords(key, item))
+                            if (DeleteWithNodeFromRecords(key, node))
                             {
                                 InsertWithNode(key, root);
                             }
@@ -519,12 +541,13 @@ namespace AuS_QuadTree.QuadTreeFolder
                                 throw new Exception("Item not deleted during change of height");
                             }
                         }
-                        foreach (TKey key in item.DoesntFitInSon.ToList<TKey>())
+                        foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
                         {
-                            if (DeleteWithNodeFromDoesntFitInSon(key, item))
+                            if (DeleteWithNodeFromDoesntFitInSon(key, node))
                             {
                                 InsertWithNode(key, root);
-                            } else
+                            }
+                            else
                             {
                                 throw new Exception("Item not deleted during change of height");
                             }
@@ -535,14 +558,15 @@ namespace AuS_QuadTree.QuadTreeFolder
             } 
             else if(newHeight > oldHeight)
             {
-                foreach (QTNode<TKey> item in nodes)
+                while (nodes.Count > 0)
                 {
-                    if (item.Height == oldHeight)
+                    node = nodes.Pop();
+                    if (node.Height == oldHeight)
                     {
-                        foreach (TKey key in item.Records)
+                        foreach (TKey key in node.Records.ToList<TKey>())
                         {
-                            item.Records.Remove(key);
-                            InsertWithNode(key, item);
+                            node.Records.Remove(key);
+                            InsertWithNode(key, node);
                         }
                     }
                 }

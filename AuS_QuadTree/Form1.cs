@@ -38,7 +38,7 @@ namespace AuS_QuadTree
                 text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
             }
 
-            if (test.TestChangeHeight(10))
+            if (test.TestChangeHeight(75))
             {
                 text += "\r\nZmena vysky prebehla uspesne";
             }

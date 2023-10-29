@@ -11,7 +11,7 @@ namespace AuS_QuadTree.QuadTreeFolder
     {
         QTNode<TKey> root;
         double maxX, maxY;
-        int maxHeight;
+        int maxHeight, secondaryKey;
         #region properties
         public QTNode<TKey> Root { get => root; set => root = value; }
         public double MaxX { get => maxX; set => maxX = value; }
@@ -25,12 +25,14 @@ namespace AuS_QuadTree.QuadTreeFolder
             MaxY = maxY_;
             MaxHeight = maxHeight_;
             Root = new QTNode<TKey>(0, 0, MaxX, MaxY, 1);
+            secondaryKey = 0;
         }
         //insert a metody pren
         public void Insert(TKey key)
         {
             QTNode<TKey> helpNode = Root;
             TKey helpData;
+            key.IdentificationKey = secondaryKey++;
             Queue<TKey> qData = new Queue<TKey>();
             Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
             qData.Enqueue(key); 
@@ -425,6 +427,19 @@ namespace AuS_QuadTree.QuadTreeFolder
                 }
             }
             return items;
+        }
+
+        //zmena vysky stromu
+        public bool ChangeHeight(int newHeight)
+        {
+            if( newHeight < maxHeight)
+            {
+
+            } else if( newHeight > maxHeight)
+            {
+
+            }
+            return true;
         }
     }
 }

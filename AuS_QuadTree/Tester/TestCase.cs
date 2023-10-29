@@ -27,7 +27,7 @@ namespace AuS_QuadTree.Tester
             Random increaseXGPS = new Random();
             Random increaseYGPS = new Random();
 
-            for(int i = 0; i < 10000; i++)
+            for(int i = 0; i < 100000; i++)
             {
                 double X1 = randomGPS1.NextDouble() * (Tree.MaxX - 250);
                 double Y1 = randomGPS2.NextDouble() * (Tree.MaxY - 250);

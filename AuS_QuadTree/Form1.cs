@@ -9,7 +9,8 @@ namespace AuS_QuadTree
         public Form1()
         {
             InitializeComponent();
-            Test();
+            //Test();
+            TestInsertAndDelete();
         }
 
 
@@ -25,10 +26,12 @@ namespace AuS_QuadTree
                 text += "\r\nDo stromu sa nevlozili vsetky prvky.";
             }
 
-            if(test.TestDelete())
+            if (test.TestDelete())
             {
                 text += "\r\nVymazal sa pocet prvkov ktory sa mal";
-            } else
+                text += test.Tree.GetNumberOfItemsInTree();
+            }
+            else
             {
                 text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
             }

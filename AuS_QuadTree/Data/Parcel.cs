@@ -10,7 +10,7 @@ namespace AuS_QuadTree.Data
 {
     public class Parcel : IQTData<Parcel>, IEquatable<Parcel>
     {
-        int index;
+        int index, identificationKey;
         string description;
         //  pravy dolny roh, lavy horny roh
         GPS upperBound, lowerBound;
@@ -22,6 +22,7 @@ namespace AuS_QuadTree.Data
         internal GPS UpperBound { get => upperBound; set => upperBound = value; }
         internal GPS LowerBound { get => lowerBound; set => lowerBound = value; }
         internal List<Estate> LocatedIn { get => locatedIn; set => locatedIn = value; }
+        public int IdentificationKey { get => identificationKey; set => identificationKey = value; }
         #endregion
 
         public Parcel(int index_, string description_, GPS upperBound_, GPS lowerBound_)
@@ -83,9 +84,7 @@ namespace AuS_QuadTree.Data
                 return false;
             }
             else if(ReferenceEquals(this, other) || 
-                   (other.index == index && other.Description.Equals(description) && 
-                    other.LowerBound.X == lowerBound.X && other.LowerBound.Y == lowerBound.Y &&
-                    other.UpperBound.X == upperBound.X && other.UpperBound.Y == upperBound.Y))
+                   (IdentificationKey == other.IdentificationKey))
             {
                 return true;
             }

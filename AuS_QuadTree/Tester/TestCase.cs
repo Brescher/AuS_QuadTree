@@ -14,6 +14,7 @@ namespace AuS_QuadTree.Tester
         List<Parcel> list = new List<Parcel>();
 
         public QuadTree<Parcel> Tree { get => tree; set => tree = value; }
+        public List<Parcel> List { get => list; set => list = value; }
 
         public TestCase()
         {
@@ -38,10 +39,10 @@ namespace AuS_QuadTree.Tester
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela { i }", GPS1, GPS2);
-                list.Add(parcela);
+                List.Add(parcela);
                 Tree.Insert(parcela);
             }
-            if(Tree.GetNumberOfItemsInTree() == list.Count)
+            if(Tree.GetNumberOfItemsInTree() == List.Count)
             {
                 return true;
             }else
@@ -54,14 +55,14 @@ namespace AuS_QuadTree.Tester
         {
             Random genItemsToDelete = new Random();
             Random genItemToDelete = new Random();
-            int numberOfItemsToDelete = genItemsToDelete.Next(list.Count);
+            int numberOfItemsToDelete = genItemsToDelete.Next(List.Count);
             int itemToDelete = 0;
             for (int i = 0; i < numberOfItemsToDelete; i++)
             {
-                itemToDelete = genItemToDelete.Next(list.Count - 1);
-                Tree.Delete(list[itemToDelete]);
-                list.RemoveAt(itemToDelete);
-                if (Tree.GetNumberOfItemsInTree() != list.Count)
+                itemToDelete = genItemToDelete.Next(List.Count - 1);
+                Tree.Delete(List[itemToDelete]);
+                List.RemoveAt(itemToDelete);
+                if (Tree.GetNumberOfItemsInTree() != List.Count)
                 {
                     return false;
                 }
@@ -72,7 +73,7 @@ namespace AuS_QuadTree.Tester
             //    Tree.Delete(list[0]);
             //    list.RemoveAt(0);
             //}
-            if (Tree.GetNumberOfItemsInTree() == list.Count)
+            if (Tree.GetNumberOfItemsInTree() == List.Count)
             {
                 return true;
             }
@@ -82,9 +83,14 @@ namespace AuS_QuadTree.Tester
             }
         }
 
+        public bool TestChangeHeight(int n)
+        {
+            return tree.ChangeHeight(n);
+        }
+
         public bool TestBoth()
         {
-            list.Clear();
+            List.Clear();
             Random randomGPS1 = new Random();
             Random randomGPS2 = new Random();
             Random increaseXGPS = new Random();
@@ -112,7 +118,7 @@ namespace AuS_QuadTree.Tester
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
-                list.Add(parcela);
+                List.Add(parcela);
                 Tree.Insert(parcela);
             }
 
@@ -132,25 +138,25 @@ namespace AuS_QuadTree.Tester
                     GPS GPS1 = new GPS('A', 'A', X1, Y1);
                     GPS GPS2 = new GPS('A', 'A', X2, Y2);
                     Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
-                    list.Add(parcela);
+                    List.Add(parcela);
                     Tree.Insert(parcela);
-                    if (Tree.GetNumberOfItemsInTree() != list.Count)
+                    if (Tree.GetNumberOfItemsInTree() != List.Count)
                     {
                         return false;
                     }
                 } else
                 {
-                    itemToDelete = genItemToDelete.Next(list.Count - 1);
-                    Tree.Delete(list[itemToDelete]);
-                    list.RemoveAt(itemToDelete);
-                    if (Tree.GetNumberOfItemsInTree() != list.Count)
+                    itemToDelete = genItemToDelete.Next(List.Count - 1);
+                    Tree.Delete(List[itemToDelete]);
+                    List.RemoveAt(itemToDelete);
+                    if (Tree.GetNumberOfItemsInTree() != List.Count)
                     {
                         return false;
                     }
                 }
             }
 
-            if (Tree.GetNumberOfItemsInTree() != list.Count)
+            if (Tree.GetNumberOfItemsInTree() != List.Count)
             {
                 return false;
             } else

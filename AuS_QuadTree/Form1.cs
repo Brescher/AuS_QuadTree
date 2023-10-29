@@ -1,6 +1,7 @@
 using AuS_QuadTree.Data;
 using AuS_QuadTree.QuadTreeFolder;
 using AuS_QuadTree.Tester;
+using System.Collections.Generic;
 
 namespace AuS_QuadTree
 {
@@ -11,6 +12,7 @@ namespace AuS_QuadTree
             InitializeComponent();
             //Test();
             TestInsertAndDelete();
+            //Run();
         }
 
 
@@ -35,6 +37,18 @@ namespace AuS_QuadTree
             {
                 text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
             }
+
+            if (test.TestChangeHeight(10))
+            {
+                text += "\r\nZmena vysky prebehla uspesne";
+            }
+            else
+            {
+                text += "\r\nZmena vysky neprebehla uspesne";
+            }
+
+            text += test.Tree.GetNumberOfItemsInTree().ToString();
+            text += $"\r\n {test.List.Count} ";
             textBox1.Text = text;
         }
 
@@ -60,10 +74,10 @@ namespace AuS_QuadTree
         }
         public void Run()
         {
-            GPS gps1 = new GPS('N', 'W', 26d, 26d);
-            GPS gps2 = new GPS('N', 'W', 49d, 49d);
-            GPS gps3 = new GPS('N', 'W', 26d, 26d);
-            GPS gps4 = new GPS('N', 'W', 30d, 30d);
+            GPS gps1 = new GPS('N', 'W', 1d, 1d);
+            GPS gps2 = new GPS('N', 'W', 2d, 2d);
+            GPS gps3 = new GPS('N', 'W', 4d, 4d);
+            GPS gps4 = new GPS('N', 'W', 5d, 5d);
             GPS gps5 = new GPS('N', 'W', 55d, 55d);
             GPS gps6 = new GPS('N', 'W', 70d, 70d);
             GPS gps7 = new GPS('N', 'W', 89d, 92d);
@@ -82,10 +96,12 @@ namespace AuS_QuadTree
             tree.Insert(p3);
             tree.Insert(p4);
             tree.Insert(p5);
-            tree.Delete(p3);
+            //tree.Delete(p3);
             List<Parcel> list = new List<Parcel>();
             list = tree.Find(0, 0, 100, 100);
             string text = "";
+
+            tree.ChangeHeight(2);
             foreach (Parcel p in list)
             {
                 Console.WriteLine($"this is result {p.Description}");

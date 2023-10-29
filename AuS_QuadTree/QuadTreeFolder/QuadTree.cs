@@ -35,15 +35,30 @@ namespace AuS_QuadTree.QuadTreeFolder
             key.IdentificationKey = secondaryKey++;
             Queue<TKey> qData = new Queue<TKey>();
             Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
-            qData.Enqueue(key); 
+            qData.Enqueue(key);
             qNodes.Enqueue(helpNode);
+            InsertBody(qData, qNodes);
+        }
 
-            while(qData.Count > 0)
+        private void InsertWithNode(TKey key, QTNode<TKey> node)
+        {
+            Queue<TKey> qData = new Queue<TKey>();
+            Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
+            qData.Enqueue(key);
+            qNodes.Enqueue(node);
+            InsertBody(qData, qNodes);
+        }
+
+        private void InsertBody(Queue<TKey> qData, Queue<QTNode<TKey>> qNodes)
+        {
+            QTNode<TKey> helpNode;
+            TKey helpData;
+            while (qData.Count > 0)
             {
                 helpData = qData.Dequeue();
                 helpNode = qNodes.Dequeue();
 
-                if(helpData == null )
+                if (helpData == null)
                 {
                     throw new Exception("null data");
                 }
@@ -66,52 +81,54 @@ namespace AuS_QuadTree.QuadTreeFolder
                             break;
                     }
                 }
-                else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1 
+                else if (helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1
                         && (helpNode.Records.Count == 0 && helpNode.DoesntFitInSon.Count == 0))
                 {
                     helpNode.Records.Add(helpData);
                 }
-                else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1
+                else if (helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1
                         && (helpNode.Records.Count > 0 || helpNode.DoesntFitInSon.Count > 0))
                 {
-                    if(SonExists(helpNode, helpData))
+                    if (SonExists(helpNode, helpData))
                     {
                         helpNode = FindSonNode(helpNode, helpData);
                         helpNode.Records.Add(helpData);
                         helpNode = helpNode.Parent;
-                    }else
+                    }
+                    else
                     {
                         helpNode.DoesntFitInSon.Add(helpData);
                     }
-                    if(helpNode.Records.Count > 0)
+                    if (helpNode.Records.Count > 0)
                     {
-                        foreach(TKey record in helpNode.Records)
+                        foreach (TKey record in helpNode.Records)
                         {
                             qData.Enqueue(record);
                             qNodes.Enqueue(helpNode);
                         }
                         helpNode.Records.Clear();
                     }
-                }else if(helpNode.IsLeaf && helpData.CompareTo(helpNode) == -1)
+                }
+                else if (helpNode.IsLeaf && helpData.CompareTo(helpNode) == -1)
                 {
                     helpNode.Parent.DoesntFitInSon.Add(helpData);
                 }
-                else if(!helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1)
+                else if (!helpNode.IsLeaf && helpData.CompareTo(helpNode) == 1)
                 {
-                    if(SonExists(helpNode, helpData))
+                    if (SonExists(helpNode, helpData))
                     {
                         helpNode = FindSonNode(helpNode, helpData);
                         qData.Enqueue(helpData);
                         qNodes.Enqueue(helpNode);
-                    } else
+                    }
+                    else
                     {
                         helpNode.DoesntFitInSon.Add(helpData);
                     }
                 }
             }
-            
         }
-        
+
         private bool SonExists(QTNode<TKey> node, TKey key)
         {
             bool allocatedSons = false;
@@ -175,20 +192,20 @@ namespace AuS_QuadTree.QuadTreeFolder
             while (nodes.Count > 0)
             {
                 node = nodes.Dequeue();
-                if(CompareCoordinatesNode(node, x1, y1, x2, y2))
+                if (CompareCoordinatesNode(node, x1, y1, x2, y2))
                 {
-                    if(!node.IsLeaf)
+                    if (!node.IsLeaf)
                     {
-                        for(int i = 0; i < node.Children.Length; i++)
+                        for (int i = 0; i < node.Children.Length; i++)
                         {
                             nodes.Enqueue(node.Children[i]);
                         }
                     }
-                    if(node.Records.Count > 0)
+                    if (node.Records.Count > 0)
                     {
-                        foreach(TKey rec in node.Records)
+                        foreach (TKey rec in node.Records)
                         {
-                            if(rec.CompareIntersect(x1, y1, x2, y2) == 1)
+                            if (rec.CompareIntersect(x1, y1, x2, y2) == 1)
                             {
                                 list.Add(rec);
                             }
@@ -212,7 +229,7 @@ namespace AuS_QuadTree.QuadTreeFolder
 
         public bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
         {
-            if(((node.LowerBoundX <= x1 && node.UpperBoundX >= x1) || (node.LowerBoundX <= x2 && node.UpperBoundX >= x2) || 
+            if (((node.LowerBoundX <= x1 && node.UpperBoundX >= x1) || (node.LowerBoundX <= x2 && node.UpperBoundX >= x2) ||
                (node.LowerBoundX >= x1 && node.LowerBoundX <= x2) || (node.UpperBoundX >= x1 && node.UpperBoundX <= x2)) &&
                ((node.LowerBoundY <= y1 && node.UpperBoundY >= y1) || (node.LowerBoundY <= y2 && node.UpperBoundY >= y2) ||
                (node.LowerBoundY >= y1 && node.LowerBoundY <= y2) || (node.UpperBoundY >= y1 && node.UpperBoundY <= y1)))
@@ -273,7 +290,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                     }
                 }
 
-                if(!itemDeleted)
+                if (!itemDeleted)
                 {
                     //najdi syna v ktorom moze byt item
                     if (helpNode.IsLeaf)
@@ -297,40 +314,85 @@ namespace AuS_QuadTree.QuadTreeFolder
 
             if (itemDeleted)
             {
-                //preskumat synov ci maju prvky a tak
-                Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
-                collapsingNodes.Enqueue(helpNode);
-                while (collapsingNodes.Count > 0)
-                {
-                    helpNode = collapsingNodes.Dequeue();
-                    if (helpNode.IsLeaf)
-                    {
-                        if (helpNode.Parent != null)
-                        {
-                            if (helpNode.CheckNumberOfItemsAsSon())
-                            {
-                                ReallocateData(helpNode.Parent);
-                                collapsingNodes.Enqueue(helpNode.Parent);
-                                helpNode.Parent.DeallocateSons();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (helpNode.CheckNumberOfItemsAsParent())
-                        {
-                            ReallocateData(helpNode);
-                            collapsingNodes.Enqueue(helpNode);
-                            helpNode.DeallocateSons();
-                        }
-                    }
-                }
-                return true;
+                ////preskumat synov ci maju prvky a tak
+                //Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
+                //collapsingNodes.Enqueue(helpNode);
+                //while (collapsingNodes.Count > 0)
+                //{
+                //    helpNode = collapsingNodes.Dequeue();
+                //    if (helpNode.IsLeaf)
+                //    {
+                //        if (helpNode.Parent != null)
+                //        {
+                //            if (helpNode.CheckNumberOfItemsAsSon())
+                //            {
+                //                ReallocateData(helpNode.Parent);
+                //                collapsingNodes.Enqueue(helpNode.Parent);
+                //                helpNode.Parent.DeallocateSons();
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (helpNode.CheckNumberOfItemsAsParent())
+                //        {
+                //            ReallocateData(helpNode);
+                //            collapsingNodes.Enqueue(helpNode);
+                //            helpNode.DeallocateSons();
+                //        }
+                //    }
+                //}
+                return DeleteBody(helpNode);
             } else
             {
                 return false;
             }
         }
+
+        private bool DeleteWithNodeFromRecords(TKey key, QTNode<TKey> node)
+        {
+            node.Records.Remove(key);
+            return DeleteBody(node);
+        }
+
+        private bool DeleteWithNodeFromDoesntFitInSon(TKey key, QTNode<TKey> node)
+        {
+            node.DoesntFitInSon.Remove(key);
+            return DeleteBody(node);
+        }
+
+        private bool DeleteBody(QTNode<TKey> helpNode)
+        {
+            Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
+            collapsingNodes.Enqueue(helpNode);
+            while (collapsingNodes.Count > 0)
+            {
+                helpNode = collapsingNodes.Dequeue();
+                if (helpNode.IsLeaf)
+                {
+                    if (helpNode.Parent != null)
+                    {
+                        if (helpNode.CheckNumberOfItemsAsSon())
+                        {
+                            ReallocateData(helpNode.Parent);
+                            collapsingNodes.Enqueue(helpNode.Parent);
+                            helpNode.Parent.DeallocateSons();
+                        }
+                    }
+                }
+                else
+                {
+                    if (helpNode.CheckNumberOfItemsAsParent())
+                    {
+                        ReallocateData(helpNode);
+                        collapsingNodes.Enqueue(helpNode);
+                        helpNode.DeallocateSons();
+                    }
+                }
+            }
+            return true;
+        }
+
 
         private void ReallocateData(QTNode<TKey> helpNode)
         {
@@ -432,14 +494,65 @@ namespace AuS_QuadTree.QuadTreeFolder
         //zmena vysky stromu
         public bool ChangeHeight(int newHeight)
         {
-            if( newHeight < maxHeight)
+            List<QTNode<TKey>> nodes = LevelOrder(root);
+            
+            if(newHeight < 1)
             {
-
-            } else if( newHeight > maxHeight)
-            {
-
+                return false;
             }
-            return true;
+            int oldHeight = maxHeight;
+            maxHeight = newHeight;
+            if (newHeight < oldHeight)
+            {
+                foreach (QTNode<TKey> item in nodes)
+                {
+                    if (item.Height > maxHeight)
+                    {
+                        foreach (TKey key in item.Records.ToList<TKey>())
+                        {
+                            if (DeleteWithNodeFromRecords(key, item))
+                            {
+                                InsertWithNode(key, root);
+                            }
+                            else
+                            {
+                                throw new Exception("Item not deleted during change of height");
+                            }
+                        }
+                        foreach (TKey key in item.DoesntFitInSon.ToList<TKey>())
+                        {
+                            if (DeleteWithNodeFromDoesntFitInSon(key, item))
+                            {
+                                InsertWithNode(key, root);
+                            } else
+                            {
+                                throw new Exception("Item not deleted during change of height");
+                            }
+                        }
+                    }
+                }
+                return true;
+            } 
+            else if(newHeight > oldHeight)
+            {
+                foreach (QTNode<TKey> item in nodes)
+                {
+                    if (item.Height == oldHeight)
+                    {
+                        foreach (TKey key in item.Records)
+                        {
+                            item.Records.Remove(key);
+                            InsertWithNode(key, item);
+                        }
+                    }
+                }
+                return true;
+            } 
+            else if(newHeight == oldHeight)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

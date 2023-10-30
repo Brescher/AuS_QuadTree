@@ -1,6 +1,5 @@
 using AuS_QuadTree.Data;
 using AuS_QuadTree.QuadTreeFolder;
-using AuS_QuadTree.Tester;
 using System.Collections.Generic;
 
 namespace AuS_QuadTree
@@ -10,68 +9,49 @@ namespace AuS_QuadTree
         public Form1()
         {
             InitializeComponent();
-            //Test();
-            TestInsertAndDelete();
             //Run();
-        }
-
-
-        public void TestInsertAndDelete()
-        {
-            TestCase test = new TestCase();
-            string text = "";
-            if (test.TestInsert())
-            {
-                text += "\r\nDo stromu sa vlozili vsetky prvky.";
-            } else
-            {
-                text += "\r\nDo stromu sa nevlozili vsetky prvky.";
-            }
-
-            if (test.TestDelete())
-            {
-                text += "\r\nVymazal sa pocet prvkov ktory sa mal";
-                text += test.Tree.GetNumberOfItemsInTree();
-            }
-            else
-            {
-                text += "\r\nNevymazal sa pocet prvkov ktory sa mal";
-            }
-
-            if (test.TestChangeHeight(75))
-            {
-                text += "\r\nZmena vysky prebehla uspesne";
-            }
-            else
-            {
-                text += "\r\nZmena vysky neprebehla uspesne";
-            }
-
-            text += test.Tree.GetNumberOfItemsInTree().ToString();
-            text += $"\r\n {test.List.Count} ";
-            textBox1.Text = text;
+            Test();
         }
 
         public void Test()
         {
-            TestCase test = new TestCase();
-            string text = "";
-            if (test.TestBoth())
-            {
-                text += "\r\nSedi pocet prvkov.";
-            }
-            else
-            {
-                text += "\r\nNesedi pocet prvkov.";
-            }
-            textBox1.Text = text;
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
 
-            List<Parcel> list = new List<Parcel>();
-            list = test.Tree.Find(0, 0, 10000, 10000);
-            text += test.Tree.GetNumberOfItemsInTree().ToString();
-            text += $"\r\n {list.Count} ";
-            textBox1.Text = text;
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
+            Random heightGen = new Random();
+
+            for (int i = 0; i < 100000; i++)
+            {
+                double X1 = randomGPS1.NextDouble() * (tree.MaxX - 250);
+                double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 250);
+                double increaseX = increaseXGPS.NextDouble() * 25;
+                double increaseY = increaseYGPS.NextDouble() * 25;
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                tree.Insert(parcela);
+            }
+
+            bool result = true;
+            for (int i = 0; i < 1000; i++)
+            {
+                int newHeight = heightGen.Next(30) + 1;
+                tree.ChangeHeight(newHeight);
+                int maxHeight = tree.GetMaxHeight();
+                if (maxHeight > newHeight)
+                {
+                    result = false;
+                    break;
+                }
+            }
+
         }
+
         public void Run()
         {
             GPS gps1 = new GPS('N', 'W', 1d, 1d);

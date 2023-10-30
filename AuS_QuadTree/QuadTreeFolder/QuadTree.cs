@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace AuS_QuadTree.QuadTreeFolder
@@ -528,28 +529,63 @@ namespace AuS_QuadTree.QuadTreeFolder
                 while(nodes.Count > 0)
                 {
                     node = nodes.Pop();
-                    if (node.Height > maxHeight)
+                    if(node.Parent != null)
                     {
-                        foreach (TKey key in node.Records.ToList<TKey>())
+                        if (!node.Parent.IsLeaf)
                         {
-                            if (DeleteWithNodeFromRecords(key, node))
+                            if (node.Height > maxHeight)
                             {
-                                InsertWithNode(key, root);
-                            }
-                            else
-                            {
-                                throw new Exception("Item not deleted during change of height");
+                                while(node.Records.Count > 0)
+                                {
+                                    TKey key = node.Records[0];
+                                    if (DeleteWithNodeFromRecords(key, node))
+                                    {
+                                        InsertWithNode(key, root);
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Item not deleted during change of height");
+                                    }
+                                }
+                                while (node.DoesntFitInSon.Count > 0)
+                                {
+                                    TKey key = node.DoesntFitInSon[0];
+                                    if (DeleteWithNodeFromDoesntFitInSon(key, node))
+                                    {
+                                        InsertWithNode(key, root);
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("Item not deleted during change of height");
+                                    }
+                                }
                             }
                         }
-                        foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
+                    } else
+                    {
+                        if (node.Height > maxHeight)
                         {
-                            if (DeleteWithNodeFromDoesntFitInSon(key, node))
+                            foreach (TKey key in node.Records.ToList<TKey>())
                             {
-                                InsertWithNode(key, root);
+                                if (DeleteWithNodeFromRecords(key, node))
+                                {
+                                    InsertWithNode(key, root);
+                                }
+                                else
+                                {
+                                    throw new Exception("Item not deleted during change of height");
+                                }
                             }
-                            else
+                            foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
                             {
-                                throw new Exception("Item not deleted during change of height");
+                                if (DeleteWithNodeFromDoesntFitInSon(key, node))
+                                {
+                                    InsertWithNode(key, root);
+                                }
+                                else
+                                {
+                                    throw new Exception("Item not deleted during change of height");
+                                }
                             }
                         }
                     }
@@ -577,6 +613,21 @@ namespace AuS_QuadTree.QuadTreeFolder
                 return true;
             }
             return false;
+        }
+
+        public int GetMaxHeight()
+        {
+            int height = 0;
+            List<QTNode<TKey>> nodes = LevelOrder(root);
+            foreach (QTNode<TKey> item in nodes)
+            {
+                if(item.Height > height)
+                {
+                    height = item.Height;
+                }
+            }
+
+            return height;
         }
     }
 }

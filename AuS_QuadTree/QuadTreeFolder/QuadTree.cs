@@ -315,34 +315,6 @@ namespace AuS_QuadTree.QuadTreeFolder
 
             if (itemDeleted)
             {
-                ////preskumat synov ci maju prvky a tak
-                //Queue<QTNode<TKey>> collapsingNodes = new Queue<QTNode<TKey>>();
-                //collapsingNodes.Enqueue(helpNode);
-                //while (collapsingNodes.Count > 0)
-                //{
-                //    helpNode = collapsingNodes.Dequeue();
-                //    if (helpNode.IsLeaf)
-                //    {
-                //        if (helpNode.Parent != null)
-                //        {
-                //            if (helpNode.CheckNumberOfItemsAsSon())
-                //            {
-                //                ReallocateData(helpNode.Parent);
-                //                collapsingNodes.Enqueue(helpNode.Parent);
-                //                helpNode.Parent.DeallocateSons();
-                //            }
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (helpNode.CheckNumberOfItemsAsParent())
-                //        {
-                //            ReallocateData(helpNode);
-                //            collapsingNodes.Enqueue(helpNode);
-                //            helpNode.DeallocateSons();
-                //        }
-                //    }
-                //}
                 return DeleteBody(helpNode);
             } else
             {
@@ -517,6 +489,7 @@ namespace AuS_QuadTree.QuadTreeFolder
         public bool ChangeHeight(int newHeight)
         {
             Stack<QTNode<TKey>> nodes = LevelOrderStack(root);
+            Stack<QTNode<TKey>> nodesToTruncate = new Stack<QTNode<TKey>>();
             QTNode<TKey> node = null;
             if (newHeight < 1)
             {
@@ -561,33 +534,45 @@ namespace AuS_QuadTree.QuadTreeFolder
                                 }
                             }
                         }
-                    } else
+                    } //else
+                    //{
+                    //    if (node.Height > maxHeight)
+                    //    {
+                    //        foreach (TKey key in node.Records.ToList<TKey>())
+                    //        {
+                    //            if (DeleteWithNodeFromRecords(key, node))
+                    //            {
+                    //                InsertWithNode(key, root);
+                    //            }
+                    //            else
+                    //            {
+                    //                throw new Exception("Item not deleted during change of height");
+                    //            }
+                    //        }
+                    //        foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
+                    //        {
+                    //            if (DeleteWithNodeFromDoesntFitInSon(key, node))
+                    //            {
+                    //                InsertWithNode(key, root);
+                    //            }
+                    //            else
+                    //            {
+                    //                throw new Exception("Item not deleted during change of height");
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    if (node.Height == maxHeight)
                     {
-                        if (node.Height > maxHeight)
-                        {
-                            foreach (TKey key in node.Records.ToList<TKey>())
-                            {
-                                if (DeleteWithNodeFromRecords(key, node))
-                                {
-                                    InsertWithNode(key, root);
-                                }
-                                else
-                                {
-                                    throw new Exception("Item not deleted during change of height");
-                                }
-                            }
-                            foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
-                            {
-                                if (DeleteWithNodeFromDoesntFitInSon(key, node))
-                                {
-                                    InsertWithNode(key, root);
-                                }
-                                else
-                                {
-                                    throw new Exception("Item not deleted during change of height");
-                                }
-                            }
-                        }
+                        nodesToTruncate.Push(node);
+                    }
+                }
+                while (nodesToTruncate.Count > 0)
+                {
+                    node = nodesToTruncate.Pop();
+                    if (node.CheckNumberOfItemsForHeightChange())
+                    {
+                        node.ReallocateDataAndDeallocateSonsForHeightChage();
                     }
                 }
                 return true;
@@ -599,10 +584,18 @@ namespace AuS_QuadTree.QuadTreeFolder
                     node = nodes.Pop();
                     if (node.Height == oldHeight)
                     {
-                        foreach (TKey key in node.Records.ToList<TKey>())
+                        while(node.GetNumberOfItems() > 1)
                         {
-                            node.Records.Remove(key);
-                            InsertWithNode(key, node);
+                            if(node.Records.Count > 0)
+                            {
+                                TKey key = node.Records[0];
+                                node.Records.RemoveAt(0);
+                                InsertWithNode(key, node);
+
+                            } else
+                            {
+                                break;
+                            }
                         }
                     }
                 }

@@ -123,6 +123,12 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                 int newHeight = heightGen.Next(100) + 1;
                 tree.ChangeHeight(newHeight);
                 int maxHeight = tree.GetMaxHeight();
+                int count = tree.GetNumberOfItemsInTree();
+                if (count != 100000)
+                {
+                    result = false;
+                    break;
+                }
                 if (maxHeight > newHeight)
                 {
                     result = false;

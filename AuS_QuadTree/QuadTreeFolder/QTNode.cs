@@ -111,10 +111,17 @@ namespace AuS_QuadTree.QuadTreeFolder
             numberOfItems += parent.doesntFitInSon.Count;
             for (int i = 0; i < parent.Children.Length; i++)
             {
-                if (parent.Children[i].IsLeaf)
+                if (Parent.Children[i] != null)
                 {
-                    numberOfItems += parent.Children[i].records.Count;
-                    numberOfItems += parent.Children[i].doesntFitInSon.Count;
+                    if (parent.Children[i].IsLeaf)
+                    {
+                        numberOfItems += parent.Children[i].records.Count;
+                        numberOfItems += parent.Children[i].doesntFitInSon.Count;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 } else
                 {
                     return false;
@@ -138,15 +145,22 @@ namespace AuS_QuadTree.QuadTreeFolder
             numberOfItems += doesntFitInSon.Count;
             for (int i = 0; i < Children.Length; i++)
             {
-                if (Children[i].IsLeaf)
+                if (Children[i] != null)
                 {
-                    numberOfItems += Children[i].records.Count;
-                    numberOfItems += Children[i].doesntFitInSon.Count;
+                    if (Children[i].IsLeaf)
+                    {
+                        numberOfItems += Children[i].records.Count;
+                        numberOfItems += Children[i].doesntFitInSon.Count;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 } else
                 {
                     return false;
                 }
-        }
+            }
 
             if (numberOfItems > 1)
             {
@@ -158,22 +172,76 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
         }
 
-        public void ReallocateDataAndDeallocateSons()
+        //public void ReallocateDataAndDeallocateSons()
+        //{
+        //    for(int i = 0; i < parent.Children.Length;i++)
+        //    {
+        //        foreach(TKey item in parent.Children[i].records)
+        //        {
+        //            parent.records.Add(item);
+        //        }
+        //        foreach (TKey item in parent.Children[i].DoesntFitInSon)
+        //        {
+        //            parent.records.Add(item);
+        //        }
+        //        parent.Children[i].Records.Clear();
+        //        parent.Children[i].DoesntFitInSon.Clear();
+        //    }
+        //    parent.DeallocateSons();
+        //}
+
+        //metoda pozrie ci pri zmene vysky moze osekat potomkov
+        //vyuziva sa pri zmene vysky ked je node.Height == tree.MaxHeight
+        public bool CheckNumberOfItemsForHeightChange()
         {
-            for(int i = 0; i < parent.Children.Length;i++)
+            int numberOfItems = 0;
+            for (int i = 0; i < Children.Length; i++)
             {
-                foreach(TKey item in parent.Children[i].records)
+                if (Children[i] != null)
                 {
-                    parent.records.Add(item);
+                    if (Children[i].IsLeaf)
+                    {
+                        numberOfItems += Children[i].records.Count;
+                        numberOfItems += Children[i].doesntFitInSon.Count;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                foreach (TKey item in parent.Children[i].DoesntFitInSon)
+                else
                 {
-                    parent.records.Add(item);
+                    return false;
                 }
-                parent.Children[i].Records.Clear();
-                parent.Children[i].DoesntFitInSon.Clear();
+
             }
-            parent.DeallocateSons();
+
+            if (numberOfItems > 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        //pouziva sa pri zmene vysky ked node.height == tree.height
+        public void ReallocateDataAndDeallocateSonsForHeightChage()
+        {
+            for (int i = 0; i < Children.Length; i++)
+            {
+                foreach (TKey item in Children[i].records)
+                {
+                    records.Add(item);
+                }
+                foreach (TKey item in Children[i].DoesntFitInSon)
+                {
+                    records.Add(item);
+                }
+                Children[i].Records.Clear();
+                Children[i].DoesntFitInSon.Clear();
+            }
+            DeallocateSons();
         }
     }
 }

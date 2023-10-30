@@ -15,47 +15,67 @@ namespace AuS_QuadTree
 
         public void Test()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
-
-            Random randomGPS1 = new Random(2);
-            Random randomGPS2 = new Random(2);
-            Random increaseXGPS = new Random(2);
-            Random increaseYGPS = new Random(2);
-            Random heightGen = new Random(8);
-
-            for (int i = 0; i < 100000; i++)
+            QuadTree<Parcel> tree;
+            List<Parcel> list = new List<Parcel>();
+            Random genItemsToDelete = new Random();
+            Random genItemToDelete = new Random();
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
+            bool result = false;
+            for (int j = 0; j < 1000; j++)
             {
-                double X1 = randomGPS1.NextDouble() * (tree.MaxX - 350);
-                double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 350);
-                double increaseX = increaseXGPS.NextDouble() * 250 + 100;
-                double increaseY = increaseYGPS.NextDouble() * 250 + 100;
-                double X2 = X1 + increaseX;
-                double Y2 = Y1 + increaseY;
-                GPS GPS1 = new GPS('A', 'A', X1, Y1);
-                GPS GPS2 = new GPS('A', 'A', X2, Y2);
-                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
-                tree.Insert(parcela);
-            }
+                tree = new QuadTree<Parcel>(10000, 10000, 20);
+                list.Clear();
+                for (int i = 0; i < 10000; i++)
+                {
+                    double X1 = randomGPS1.NextDouble() * (tree.MaxX - 25);
+                    double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 25);
+                    double increaseX = increaseXGPS.NextDouble() * 25;
+                    double increaseY = increaseYGPS.NextDouble() * 25;
+                    double X2 = X1 + increaseX;
+                    double Y2 = Y1 + increaseY;
+                    GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                    GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                    Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                    list.Add(parcela);
+                    tree.Insert(parcela);
+                }
 
-            bool result = true;
-            for (int i = 0; i < 1000; i++)
-            {
-                int newHeight = heightGen.Next(30) + 1;
-                int oldHeight = tree.MaxHeight;
-                tree.ChangeHeight(newHeight);
-                int maxHeight = tree.GetMaxHeight();
-                int count = tree.GetNumberOfItemsInTree();
-                if (count != 100000)
+                int numberOfItemsToDelete = genItemsToDelete.Next(list.Count);
+                int itemToDelete = 0;
+                for (int i = 0; i < numberOfItemsToDelete; i++)
+                {
+                    itemToDelete = genItemToDelete.Next(list.Count - 1);
+                    if (!tree.Delete(list[itemToDelete]))
+                    {
+                        result = false;
+                    }
+                    list.RemoveAt(itemToDelete);
+                    if (tree.GetNumberOfItemsInTree() != list.Count)
+                    {
+                        result = false;
+                    }
+                }
+                //int count = list.Count;
+                //for (int i = 0; i < count; i++)
+                //{
+                //    Tree.Delete(list[0]);
+                //    list.RemoveAt(0);
+                //}
+
+                if (tree.GetNumberOfItemsInTree() == list.Count)
+                {
+                    result = true;
+                }
+                else
                 {
                     result = false;
                     break;
                 }
-                if (maxHeight > newHeight)
-                {
-                    result = false;
-                    break;
-                }
             }
+
 
         }
 

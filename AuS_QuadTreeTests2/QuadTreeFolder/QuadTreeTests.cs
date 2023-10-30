@@ -58,37 +58,67 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void DeleteTest()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree;
             List<Parcel> list = new List<Parcel>();
             Random genItemsToDelete = new Random();
             Random genItemToDelete = new Random();
-            int numberOfItemsToDelete = genItemsToDelete.Next(list.Count);
-            int itemToDelete = 0;
-            for (int i = 0; i < numberOfItemsToDelete; i++)
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
+            bool result = false;
+            for (int j = 0; j < 10; j++)
             {
-                itemToDelete = genItemToDelete.Next(list.Count - 1);
-                tree.Delete(list[itemToDelete]);
-                list.RemoveAt(itemToDelete);
-                if (tree.GetNumberOfItemsInTree() != list.Count)
+                tree = new QuadTree<Parcel>(10000, 10000, 20);
+                list.Clear();
+                for (int i = 0; i < 10000; i++)
                 {
-                    Assert.IsTrue(false);
+                    double X1 = randomGPS1.NextDouble() * (tree.MaxX - 25);
+                    double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 25);
+                    double increaseX = increaseXGPS.NextDouble() * 25;
+                    double increaseY = increaseYGPS.NextDouble() * 25;
+                    double X2 = X1 + increaseX;
+                    double Y2 = Y1 + increaseY;
+                    GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                    GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                    Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                    list.Add(parcela);
+                    tree.Insert(parcela);
+                }
+
+                int numberOfItemsToDelete = genItemsToDelete.Next(list.Count);
+                int itemToDelete = 0;
+                for (int i = 0; i < numberOfItemsToDelete; i++)
+                {
+                    itemToDelete = genItemToDelete.Next(list.Count - 1);
+                    if (!tree.Delete(list[itemToDelete]))
+                    {
+                        Assert.IsTrue(false);
+                    }
+                    list.RemoveAt(itemToDelete);
+                    if (tree.GetNumberOfItemsInTree() != list.Count)
+                    {
+                        Assert.IsTrue(false);
+                    }
+                }
+                //int count = list.Count;
+                //for (int i = 0; i < count; i++)
+                //{
+                //    Tree.Delete(list[0]);
+                //    list.RemoveAt(0);
+                //}
+                
+                if (tree.GetNumberOfItemsInTree() == list.Count)
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                    break;
                 }
             }
-            //int count = list.Count;
-            //for (int i = 0; i < count; i++)
-            //{
-            //    Tree.Delete(list[0]);
-            //    list.RemoveAt(0);
-            //}
-            bool result;
-            if (tree.GetNumberOfItemsInTree() == list.Count)
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
+            
             Assert.IsTrue(result);
         }
 
@@ -177,7 +207,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
             }
 
             double opearation;
-            for (int i = 0; i < 50000; i++)
+            for (int i = 0; i < 500000; i++)
             {
                 opearation = opeartionGen.NextDouble();
                 if (opearation < 0.5)

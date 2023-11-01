@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AuS_QuadTree.Data
 {
-    internal class Estate : IQTData<Parcel>, IEquatable<Estate>
+    public class Estate : IQTData<Estate>, IEquatable<Estate>
     {
         int index, identificationKey;
         string description;
@@ -30,6 +31,8 @@ namespace AuS_QuadTree.Data
             this.UpperBound = upperBound_;
             this.LowerBound = lowerBound_;
 
+            LocatedOn = new List<Parcel>();
+
             if (LowerBound.X > UpperBound.X)
             {
                 double hlp = UpperBound.X;
@@ -46,7 +49,7 @@ namespace AuS_QuadTree.Data
 
         
 
-        public int CompareTo(QTNode<Parcel> node_)
+        public int CompareTo(QTNode<Estate> node_)
         {
             if (node_ == null)
             {

@@ -32,6 +32,8 @@ namespace AuS_QuadTree.Data
             this.UpperBound = upperBound_;
             this.LowerBound = lowerBound_;
 
+            LocatedIn = new List<Estate>();
+
             if (LowerBound.X > UpperBound.X)
             {
                 double hlp = UpperBound.X;

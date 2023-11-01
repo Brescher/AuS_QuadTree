@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AuS_QuadTree.Data
 {
     public class GPS
-    {       //sirka - x    dlzka - y
+    {       //sirka - Y    dlzka - X
         char latitude, longitude;
         double x, y;
 

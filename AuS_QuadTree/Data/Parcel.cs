@@ -52,10 +52,10 @@ namespace AuS_QuadTree.Data
         {
             if (node_ == null) {
                 return 0;
-            }else if((LowerBound.X > node_.LowerBoundX && LowerBound.X < node_.UpperBoundX) &&
-               (LowerBound.Y > node_.LowerBoundY && LowerBound.Y < node_.UpperBoundY) &&
-               (UpperBound.X > node_.LowerBoundX && UpperBound.X < node_.UpperBoundX) &&
-               (UpperBound.Y > node_.LowerBoundY && UpperBound.Y < node_.UpperBoundY))
+            }else if((LowerBound.X >= node_.LowerBoundX && LowerBound.X <= node_.UpperBoundX) &&
+               (LowerBound.Y >= node_.LowerBoundY && LowerBound.Y <= node_.UpperBoundY) &&
+               (UpperBound.X >= node_.LowerBoundX && UpperBound.X <= node_.UpperBoundX) &&
+               (UpperBound.Y >= node_.LowerBoundY && UpperBound.Y <= node_.UpperBoundY))
             {
                 return 1;
             } else

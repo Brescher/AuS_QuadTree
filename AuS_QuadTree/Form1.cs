@@ -12,38 +12,71 @@ namespace AuS_QuadTree
         public Form1()
         {
             InitializeComponent();
-            test();
+            //test();
         }
 
         public void test()
         {
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            List<Parcel> list = new List<Parcel>();
+            List<Parcel> find = new List<Parcel>();
+
             Random randomGPS1 = new Random();
             Random randomGPS2 = new Random();
             Random increaseXGPS = new Random();
             Random increaseYGPS = new Random();
 
-            GPS GPS1;
-            GPS GPS2;
-            QuadTree<Parcel> Parcels = Parcels = new QuadTree<Parcel>(100, 100, 20);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10000; i++)
             {
-                double X1 = randomGPS1.NextDouble() * (Parcels.MaxX - 10);
-                double Y1 = randomGPS2.NextDouble() * (Parcels.MaxY - 10);
-                double increaseX = increaseXGPS.NextDouble() * 10;
-                double increaseY = increaseYGPS.NextDouble() * 10;
+                double X1 = randomGPS1.NextDouble() * (tree.MaxX - 250);
+                double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 250);
+                double increaseX = increaseXGPS.NextDouble() * 250;
+                double increaseY = increaseYGPS.NextDouble() * 250;
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
-
-                GPS1 = new GPS('A', 'A', X1, Y1);
-                GPS2 = new GPS('A', 'A', X2, Y2);
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
-                Parcels.Insert(parcela);
+                list.Add(parcela);
+                tree.Insert(parcela);
             }
 
-            GPS1 = new GPS('A', 'A', 50, 50);
-            GPS2 = new GPS('A', 'A', 75, 75);
-            Parcel parcelaa = new Parcel(10, "10", GPS1, GPS2);
-            Parcels.Insert(parcelaa);
+            Random randomFind1 = new Random();
+            Random randomFind2 = new Random();
+            Random randomFindincreaseX = new Random();
+            Random randomFindincreaseY = new Random();
+
+            bool foundAll = true;
+            for (int i = 0; i < 10; i++)
+            {
+                double X1 = randomFind1.NextDouble() * (tree.MaxX - tree.MaxX / 2);
+                double Y1 = randomFind2.NextDouble() * (tree.MaxY - tree.MaxY / 2);
+                double increaseX = randomFindincreaseX.NextDouble() * (tree.MaxX / 2);
+                double increaseY = randomFindincreaseY.NextDouble() * (tree.MaxY / 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+                find = tree.Find(X1, Y1, X2, Y2);
+
+                bool foundOne = false;
+                foreach (Parcel item in find)
+                {
+                    foundOne = false;
+                    foreach (Parcel item1 in list)
+                    {
+                        if (item.Equals(item1))
+                        {
+                            foundOne = true;
+                            break;
+                        }
+                    }
+                    if (!foundOne)
+                    {
+                        foundAll = false;
+                        break;
+                    }
+                }
+            }
+
         }
 
         private void findParcels_Click(object sender, EventArgs e)

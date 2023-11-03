@@ -534,34 +534,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                                 }
                             }
                         }
-                    } //else
-                    //{
-                    //    if (node.Height > maxHeight)
-                    //    {
-                    //        foreach (TKey key in node.Records.ToList<TKey>())
-                    //        {
-                    //            if (DeleteWithNodeFromRecords(key, node))
-                    //            {
-                    //                InsertWithNode(key, root);
-                    //            }
-                    //            else
-                    //            {
-                    //                throw new Exception("Item not deleted during change of height");
-                    //            }
-                    //        }
-                    //        foreach (TKey key in node.DoesntFitInSon.ToList<TKey>())
-                    //        {
-                    //            if (DeleteWithNodeFromDoesntFitInSon(key, node))
-                    //            {
-                    //                InsertWithNode(key, root);
-                    //            }
-                    //            else
-                    //            {
-                    //                throw new Exception("Item not deleted during change of height");
-                    //            }
-                    //        }
-                    //    }
-                    //}
+                    }
                     if (node.Height == maxHeight)
                     {
                         nodesToTruncate.Push(node);

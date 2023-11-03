@@ -52,7 +52,86 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void FindTest()
         {
-            Assert.Fail();
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            List<Parcel> list = new List<Parcel>();
+            List<Parcel> list2 = new List<Parcel>();
+            List<Parcel> find = new List<Parcel>();
+
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
+
+            for (int i = 0; i < 10000; i++)
+            {
+                double X1 = randomGPS1.NextDouble() * (tree.MaxX - 250);
+                double Y1 = randomGPS2.NextDouble() * (tree.MaxY - 250);
+                double increaseX = increaseXGPS.NextDouble() * 250;
+                double increaseY = increaseYGPS.NextDouble() * 250;
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                list.Add(parcela);
+                tree.Insert(parcela);
+            }
+
+            Random randomFind1 = new Random();
+            Random randomFind2 = new Random();
+            Random randomFindincreaseX = new Random();
+            Random randomFindincreaseY = new Random();
+
+            bool foundAll = true;
+            for (int i = 0; i < 1000; i++)
+            {
+                double X1 = randomFind1.NextDouble() * (tree.MaxX - tree.MaxX / 2);
+                double Y1 = randomFind2.NextDouble() * (tree.MaxY - tree.MaxY / 2);
+                double increaseX = randomFindincreaseX.NextDouble() * (tree.MaxX / 2);
+                double increaseY = randomFindincreaseY.NextDouble() * (tree.MaxY / 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+                find = tree.Find(X1, Y1, X2, Y2);
+                list2.Clear();
+
+                foreach (Parcel parcela in list)
+                {
+                    if (((parcela.LowerBound.X <= X1 && parcela.UpperBound.X >= X1 || (parcela.LowerBound.X <= X2 && parcela.UpperBound.X >= X2) ||
+                            (parcela.LowerBound.X >= X1 && parcela.LowerBound.X <= X2) || (parcela.UpperBound.X >= X1 && parcela.UpperBound.X <= X2)) &&
+                            ((parcela.LowerBound.Y <= Y1 && parcela.UpperBound.Y >= Y1) || (parcela.LowerBound.Y <= Y2 && parcela.UpperBound.Y >= Y2) ||
+                            (parcela.LowerBound.Y >= Y1 && parcela.LowerBound.Y <= Y2) || (parcela.UpperBound.Y >= Y1 && parcela.UpperBound.Y <= Y2))))
+                    {
+                        list2.Add(parcela);
+                    }
+                }
+                
+
+                if(list2.Count != find.Count)
+                {
+                    Assert.IsTrue(false);
+                }
+
+                bool foundOne = false;
+                foreach (Parcel item in find)
+                {
+                    foundOne = false;
+                    foreach (Parcel item1 in list2)
+                    {
+                        if (item.Equals(item1))
+                        {
+                            foundOne = true;
+                            break;
+                        }
+                    }
+                    if (!foundOne)
+                    {
+                        foundAll = false;
+                        break;
+                    }
+                }
+            }
+
+            Assert.IsTrue(foundAll);
         }
 
         [TestMethod()]

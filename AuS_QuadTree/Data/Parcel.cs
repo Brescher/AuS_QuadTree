@@ -19,9 +19,9 @@ namespace AuS_QuadTree.Data
         # region properties
         public int Index { get => index; set => index = value; }
         public string Description { get => description; set => description = value; }
-        internal GPS UpperBound { get => upperBound; set => upperBound = value; }
-        internal GPS LowerBound { get => lowerBound; set => lowerBound = value; }
-        internal List<Estate> LocatedIn { get => locatedIn; set => locatedIn = value; }
+        public GPS UpperBound { get => upperBound; set => upperBound = value; }
+        public GPS LowerBound { get => lowerBound; set => lowerBound = value; }
+        public List<Estate> LocatedIn { get => locatedIn; set => locatedIn = value; }
         public int IdentificationKey { get => identificationKey; set => identificationKey = value; }
         #endregion
 
@@ -69,7 +69,7 @@ namespace AuS_QuadTree.Data
             if (((LowerBound.X <= _x1 && UpperBound.X >= _x1) || (LowerBound.X <= _x2 && UpperBound.X >= _x2) ||
                (LowerBound.X >= _x1 && LowerBound.X <= _x2) || (UpperBound.X >= _x1 && UpperBound.X <= _x2)) &&
                ((LowerBound.Y <= _y1 && UpperBound.Y >= _y1) || (LowerBound.Y <= _y2 && UpperBound.Y >= _y2) ||
-               (LowerBound.Y >= _y1 && LowerBound.Y <= _y2) || (UpperBound.Y >= _y1 && UpperBound.Y <= _y1)))
+               (LowerBound.Y >= _y1 && LowerBound.Y <= _y2) || (UpperBound.Y >= _y1 && UpperBound.Y <= _y2)))
             { 
                 return 1;
             }

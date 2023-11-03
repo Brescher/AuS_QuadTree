@@ -33,7 +33,6 @@ namespace AuS_QuadTree.QuadTreeFolder
         {
             QTNode<TKey> helpNode = Root;
             TKey helpData;
-            key.IdentificationKey = secondaryKey++;
             Queue<TKey> qData = new Queue<TKey>();
             Queue<QTNode<TKey>> qNodes = new Queue<QTNode<TKey>>();
             qData.Enqueue(key);

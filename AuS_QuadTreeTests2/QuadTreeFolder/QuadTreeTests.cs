@@ -34,6 +34,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
                 list.Add(parcela);
                 tree.Insert(parcela);
             }
@@ -73,6 +74,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
                 list.Add(parcela);
                 tree.Insert(parcela);
             }
@@ -161,6 +163,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                     GPS GPS1 = new GPS('A', 'A', X1, Y1);
                     GPS GPS2 = new GPS('A', 'A', X2, Y2);
                     Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                    parcela.IdentificationKey = i;
                     list.Add(parcela);
                     tree.Insert(parcela);
                 }
@@ -223,6 +226,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
                 tree.Insert(parcela);
             }
 
@@ -269,6 +273,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
             double X2;
             double Y2;
             int itemToDelete = 0;
+            int index = 0;
 
             for (int i = 0; i < 1000; i++)
             {
@@ -281,6 +286,8 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                 GPS GPS1 = new GPS('A', 'A', X1, Y1);
                 GPS GPS2 = new GPS('A', 'A', X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = index;
+                index++;
                 list.Add(parcela);
                 tree.Insert(parcela);
             }
@@ -301,6 +308,8 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
                     GPS GPS1 = new GPS('A', 'A', X1, Y1);
                     GPS GPS2 = new GPS('A', 'A', X2, Y2);
                     Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                    parcela.IdentificationKey = index;
+                    index++;
                     list.Add(parcela);
                     tree.Insert(parcela);
                     if (tree.GetNumberOfItemsInTree() != list.Count)

@@ -436,30 +436,30 @@ namespace AuS_QuadTree.QuadTreeFolder
             return levelOrder;
         }
 
-        public void Optimize()
+        public void TreeHealth()
         {
-            QuadTree<TKey> newTree;
+
             double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
             double maxToOtherRatio = 0, minToOtherRatioSum = 0;
             int indexMax = 0, indexMin = 0, iteration = 1;
             if (root.IsLeaf)
             {
                 return;
-            } 
+            }
             else
             {
                 //zmena rozmerov
                 int[] arrayItems = new int[4];
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     int items = GetNumberOfItemsInSubTree(root.Children[i]);
                     arrayItems[i] = items;
-                    if(max < items)
+                    if (max < items)
                     {
                         max = items;
                         indexMax = i;
                     }
-                    if(min > items)
+                    if (min > items)
                     {
                         min = items;
                         indexMin = i;
@@ -470,7 +470,7 @@ namespace AuS_QuadTree.QuadTreeFolder
                 allExceptMax -= max;
                 allExceptMin -= min;
 
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     if (i != indexMin)
                     {
@@ -478,12 +478,12 @@ namespace AuS_QuadTree.QuadTreeFolder
                     }
                 }
 
-                maxToOtherRatio = max/allExceptMax;
+                maxToOtherRatio = max / allExceptMax;
 
-                
+
                 double newMinX = minX, newMinY = minY, newMaxX = maxX, newMaxY = maxY;
                 double factor = 8 * iteration;
-                if(maxToOtherRatio > 1)
+                if (maxToOtherRatio > 1)
                 {
                     switch (indexMax)
                     {
@@ -514,7 +514,8 @@ namespace AuS_QuadTree.QuadTreeFolder
                         default:
                             break;
                     }
-                } else if(minToOtherRatioSum < 1)
+                }
+                else if (minToOtherRatioSum < 1)
                 {
                     switch (indexMax)
                     {
@@ -545,7 +546,8 @@ namespace AuS_QuadTree.QuadTreeFolder
                         default:
                             break;
                     }
-                } else
+                }
+                else
                 {
                     newMinX = minX;
                     newMinY = minY;
@@ -556,36 +558,49 @@ namespace AuS_QuadTree.QuadTreeFolder
                 //zmena vysky
                 double avgItems = GetAvgNumberOfItemsInLeaves();
                 int newHeight = MaxHeight;
-                if(avgItems > 1)
+                if (avgItems > 1)
                 {
                     double hlpVar = avgItems / MaxHeight;
                     double increase = MaxHeight * hlpVar;
                     newHeight = MaxHeight + Convert.ToInt32(Math.Ceiling(increase));
-                } else if(avgItems < 0.3)
+                }
+                else if (avgItems < 0.3)
                 {
                     double hlpVar = avgItems * MaxHeight;
                     double decrease = MaxHeight * hlpVar;
                     newHeight = MaxHeight - Convert.ToInt32(Math.Ceiling(decrease));
                 }
 
-                newTree = new QuadTree<TKey>(newMinX, newMinY, newMaxX, newMaxY, newHeight);
-                List<QTNode<TKey>> levelOrder = LevelOrder(root);
-
-                foreach  (QTNode<TKey> node in levelOrder)
+                if (newMinX != minX || newMaxX != maxX || newMinY != minY || newMaxY != maxY)
                 {
-                    foreach (TKey item in node.Records)
-                    {
-                        newTree.Insert(item);
-                    }
+                    Optimize(newMinX, newMinY, newMaxX, newMaxY, newHeight);
+                }
+                else if (newHeight != maxHeight)
+                {
+                    ChangeHeight(newHeight);
+                }
+            }
+        }
 
-                    foreach (TKey item in node.DoesntFitInSon)
-                    {
-                        newTree.Insert(item);
-                    }
+        public void Optimize(double newMinX, double newMinY, double newMaxX, double newMaxY, int newHeight)
+        {
+            QuadTree<TKey> newTree = new QuadTree<TKey>(newMinX, newMinY, newMaxX, newMaxY, newHeight);
+            List<QTNode<TKey>> levelOrder = LevelOrder(root);
+
+            foreach (QTNode<TKey> node in levelOrder)
+            {
+                foreach (TKey item in node.Records)
+                {
+                    newTree.Insert(item);
                 }
 
-                root = newTree.Root;
+                foreach (TKey item in node.DoesntFitInSon)
+                {
+                    newTree.Insert(item);
+                }
             }
+
+            root = newTree.Root;
         }
 
         private double GetAvgNumberOfItemsInLeaves()

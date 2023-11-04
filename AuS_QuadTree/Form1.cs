@@ -17,7 +17,7 @@ namespace AuS_QuadTree
 
         public void test()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 50);
             List<Parcel> list = new List<Parcel>();
             List<Parcel> find = new List<Parcel>();
 

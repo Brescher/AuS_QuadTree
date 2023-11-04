@@ -19,8 +19,8 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         public Features()
         {
-            Parcels = new QuadTree<Parcel>(100000, 100000, 20);
-            Estates = new QuadTree<Estate>(100000, 100000, 20);
+            Parcels = new QuadTree<Parcel>(0, 0, 100000, 100000, 20);
+            Estates = new QuadTree<Estate>(0, 0, 100000, 100000, 20);
             populateTrees();
         }
 

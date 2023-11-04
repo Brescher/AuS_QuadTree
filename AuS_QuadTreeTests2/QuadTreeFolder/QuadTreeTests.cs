@@ -15,7 +15,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void InsertTest()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 50);
             List<Parcel> list = new List<Parcel>();
 
             Random randomGPS1 = new Random();
@@ -53,7 +53,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void FindTest()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 50);
             List<Parcel> list = new List<Parcel>();
             List<Parcel> list2 = new List<Parcel>();
             List<Parcel> find = new List<Parcel>();
@@ -150,7 +150,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
             bool result = false;
             for (int j = 0; j < 10; j++)
             {
-                tree = new QuadTree<Parcel>(10000, 10000, 20);
+                tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 20);
                 list.Clear();
                 for (int i = 0; i < 10000; i++)
                 {
@@ -207,7 +207,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void ChangeHeightTest()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 50);
 
             Random randomGPS1 = new Random();
             Random randomGPS2 = new Random();
@@ -255,7 +255,7 @@ namespace AuS_QuadTree.QuadTreeFolder.Tests
         [TestMethod()]
         public void InsertAndDeleteTest()
         {
-            QuadTree<Parcel> tree = new QuadTree<Parcel>(10000, 10000, 50);
+            QuadTree<Parcel> tree = new QuadTree<Parcel>(0, 0, 10000, 10000, 50);
             List<Parcel> list = new List<Parcel>();
 
             Random randomGPS1 = new Random();

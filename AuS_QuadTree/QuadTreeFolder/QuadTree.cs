@@ -12,21 +12,25 @@ namespace AuS_QuadTree.QuadTreeFolder
     {
         QTNode<TKey> root;
         double maxX, maxY;
-        int maxHeight, secondaryKey;
+        double minX, minY;
+        int maxHeight;
         #region properties
         public QTNode<TKey> Root { get => root; set => root = value; }
         public double MaxX { get => maxX; set => maxX = value; }
         public double MaxY { get => maxY; set => maxY = value; }
         public int MaxHeight { get => maxHeight; set => maxHeight = value; }
+        public double MinX { get => minX; set => minX = value; }
+        public double MinY { get => minY; set => minY = value; }
         #endregion
 
-        public QuadTree(double maxX_, double maxY_, int maxHeight_)
+        public QuadTree(double minX_, double minY_, double maxX_, double maxY_, int maxHeight_)
         {
+            MinX = minX_;
+            MinY = minY_;
             MaxX = maxX_;
             MaxY = maxY_;
             MaxHeight = maxHeight_;
-            Root = new QTNode<TKey>(0, 0, MaxX, MaxY, 1);
-            secondaryKey = 0;
+            Root = new QTNode<TKey>(MinX, MinY, MaxX, MaxY, 1);
         }
         //insert a metody pren
         public void Insert(TKey key)
@@ -432,33 +436,64 @@ namespace AuS_QuadTree.QuadTreeFolder
             return levelOrder;
         }
 
-        public double GetTreeHealth()
+        public double Optimize()
         {
-            double max = 0, min = int.MaxValue;
+            QuadTree<TKey> newTree;
+            double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
+            double maxToOtherRatio = 0, minToOtherRatioSum = 0;
+            int indexMax = 0, indexMin = 0;
             if (root.IsLeaf)
             {
                 return 1;
-            } else
+            } 
+            else
             {
-                List<QTNode<TKey>>[] qTNodes = new List<QTNode<TKey>>[4];
-                qTNodes[0] = LevelOrder(root.Children[0]);
-                qTNodes[1] = LevelOrder(root.Children[1]);
-                qTNodes[2] = LevelOrder(root.Children[2]);
-                qTNodes[3] = LevelOrder(root.Children[3]);
-
-                for(int i = 0; i < qTNodes.Length; i++)
+                //List<QTNode<TKey>>[] qTNodes = new List<QTNode<TKey>>[4];
+                //qTNodes[0] = LevelOrder(root.Children[0]);
+                //qTNodes[1] = LevelOrder(root.Children[1]);
+                //qTNodes[2] = LevelOrder(root.Children[2]);
+                //qTNodes[3] = LevelOrder(root.Children[3]);
+                int[] arrayItems = new int[4];
+                for(int i = 0; i < 4; i++)
                 {
-                    List<QTNode<TKey>> list = qTNodes[i];
-                    if(max < list[list.Count - 1].Height)
+                    int items = GetNumberOfItemsInSubTree(root.Children[i]);
+                    arrayItems[i] = items;
+                    //List<QTNode<TKey>> list = qTNodes[i];
+                    if(max < items)
                     {
-                        max = list[list.Count - 1].Height;
+                        max = items;
+                        indexMax = i;
                     }
-                    if(min > list[list.Count - 1].Height)
+                    if(min > items)
                     {
-                        min = list[list.Count - 1].Height;
+                        min = items;
+                        indexMin = i;
+                    }
+                    allExceptMax += items;
+                    allExceptMin += items;
+                }
+                allExceptMax -= max;
+                allExceptMin -= min;
+
+                for(int i = 0; i < 4; i++)
+                {
+                    if (i != indexMin)
+                    {
+                        minToOtherRatioSum += min / arrayItems[i];
                     }
                 }
 
+                maxToOtherRatio = max/allExceptMax;
+
+
+                double minX, minY, maxX, maxY;
+                if(maxToOtherRatio > 1)
+                {
+                    //switch podla toho, ktory je max, tak upravit velkost stromu, tak isto pre minimum, potom prejst na vysku podla priemerneho poctu prvkov v liste
+                } else if(minToOtherRatioSum < 1)
+                {
+
+                }
             }
             return min/max;
         }
@@ -469,6 +504,27 @@ namespace AuS_QuadTree.QuadTreeFolder
             Queue<QTNode<TKey>> queue = new Queue<QTNode<TKey>>();
             QTNode<TKey> helpNode = null;
             queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                helpNode = queue.Dequeue();
+                items += helpNode.GetNumberOfItems();
+                if (!helpNode.IsLeaf)
+                {
+                    foreach (QTNode<TKey> son in helpNode.Children)
+                    {
+                        queue.Enqueue(son);
+                    }
+                }
+            }
+            return items;
+        }
+
+        private int GetNumberOfItemsInSubTree(QTNode<TKey> node)
+        {
+            int items = 0;
+            Queue<QTNode<TKey>> queue = new Queue<QTNode<TKey>>();
+            QTNode<TKey> helpNode = null;
+            queue.Enqueue(node);
             while (queue.Count > 0)
             {
                 helpNode = queue.Dequeue();
@@ -587,6 +643,21 @@ namespace AuS_QuadTree.QuadTreeFolder
             foreach (QTNode<TKey> item in nodes)
             {
                 if(item.Height > height)
+                {
+                    height = item.Height;
+                }
+            }
+
+            return height;
+        }
+
+        private int GetMaxHeight(QTNode<TKey> node)
+        {
+            int height = 0;
+            List<QTNode<TKey>> nodes = LevelOrder(node);
+            foreach (QTNode<TKey> item in nodes)
+            {
+                if (item.Height > height)
                 {
                     height = item.Height;
                 }

@@ -441,7 +441,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             QuadTree<TKey> newTree;
             double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
             double maxToOtherRatio = 0, minToOtherRatioSum = 0;
-            int indexMax = 0, indexMin = 0;
+            int indexMax = 0, indexMin = 0, iteration = 1;
             if (root.IsLeaf)
             {
                 return 1;
@@ -486,10 +486,43 @@ namespace AuS_QuadTree.QuadTreeFolder
                 maxToOtherRatio = max/allExceptMax;
 
 
-                double minX, minY, maxX, maxY;
+                double newMinX, newMinY, newMaxX, newMaxY;
+                double factor = 8 * iteration;
                 if(maxToOtherRatio > 1)
                 {
+                    //robit osminy a tak dalej velksot novu
                     //switch podla toho, ktory je max, tak upravit velkost stromu, tak isto pre minimum, potom prejst na vysku podla priemerneho poctu prvkov v liste
+                    switch (indexMax)
+                    {
+                        case 0:
+                            newMinX = minX - (maxX / factor);
+                            newMinY = minY - (maxY / factor);
+                            newMaxX = maxX;
+                            newMaxY = maxY;
+                            break;
+                        case 1:
+                            newMinX = minX;
+                            newMinY = minY - (maxY / factor);
+                            newMaxX = maxX + (maxX / factor);
+                            newMaxY = maxY;
+                            break;
+                        case 2:
+                            newMinX = minX;
+                            newMinY = minY;
+                            newMaxX = maxX + (maxX / factor);
+                            newMaxY = maxY + (maxY / factor);
+                            break;
+                        case 3:
+                            newMinX = minX = minX - (maxX / factor);
+                            newMinY = minY;
+                            newMaxX = maxX;
+                            newMaxY = maxY + (maxY / factor);
+                            break;
+                        default:
+                            break;
+
+
+                    }
                 } else if(minToOtherRatioSum < 1)
                 {
 

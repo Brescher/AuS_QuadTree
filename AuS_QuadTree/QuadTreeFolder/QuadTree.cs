@@ -436,7 +436,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             return levelOrder;
         }
 
-        public double Optimize()
+        public void Optimize()
         {
             QuadTree<TKey> newTree;
             double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
@@ -444,21 +444,16 @@ namespace AuS_QuadTree.QuadTreeFolder
             int indexMax = 0, indexMin = 0, iteration = 1;
             if (root.IsLeaf)
             {
-                return 1;
+                return;
             } 
             else
             {
-                //List<QTNode<TKey>>[] qTNodes = new List<QTNode<TKey>>[4];
-                //qTNodes[0] = LevelOrder(root.Children[0]);
-                //qTNodes[1] = LevelOrder(root.Children[1]);
-                //qTNodes[2] = LevelOrder(root.Children[2]);
-                //qTNodes[3] = LevelOrder(root.Children[3]);
+                //zmena rozmerov
                 int[] arrayItems = new int[4];
                 for(int i = 0; i < 4; i++)
                 {
                     int items = GetNumberOfItemsInSubTree(root.Children[i]);
                     arrayItems[i] = items;
-                    //List<QTNode<TKey>> list = qTNodes[i];
                     if(max < items)
                     {
                         max = items;
@@ -485,13 +480,11 @@ namespace AuS_QuadTree.QuadTreeFolder
 
                 maxToOtherRatio = max/allExceptMax;
 
-
-                double newMinX, newMinY, newMaxX, newMaxY;
+                
+                double newMinX = minX, newMinY = minY, newMaxX = maxX, newMaxY = maxY;
                 double factor = 8 * iteration;
                 if(maxToOtherRatio > 1)
                 {
-                    //robit osminy a tak dalej velksot novu
-                    //switch podla toho, ktory je max, tak upravit velkost stromu, tak isto pre minimum, potom prejst na vysku podla priemerneho poctu prvkov v liste
                     switch (indexMax)
                     {
                         case 0:
@@ -513,22 +506,103 @@ namespace AuS_QuadTree.QuadTreeFolder
                             newMaxY = maxY + (maxY / factor);
                             break;
                         case 3:
-                            newMinX = minX = minX - (maxX / factor);
+                            newMinX = minX - (maxX / factor);
                             newMinY = minY;
                             newMaxX = maxX;
                             newMaxY = maxY + (maxY / factor);
                             break;
                         default:
                             break;
-
-
                     }
                 } else if(minToOtherRatioSum < 1)
                 {
+                    switch (indexMax)
+                    {
+                        case 0:
+                            newMinX = minX;
+                            newMinY = minY;
+                            newMaxX = maxX + (maxX / factor);
+                            newMaxY = maxY + (maxY / factor);
+                            break;
+                        case 1:
+                            newMinX = minX - (maxX / factor);
+                            newMinY = minY;
+                            newMaxX = maxX;
+                            newMaxY = maxY + (maxY / factor);
+                            break;
+                        case 2:
+                            newMinX = minX - (maxX / factor);
+                            newMinY = minY - (maxY / factor);
+                            newMaxX = maxX;
+                            newMaxY = maxY;
+                            break;
+                        case 3:
+                            newMinX = minX;
+                            newMinY = minY - (maxY / factor);
+                            newMaxX = maxX + (maxX / factor);
+                            newMaxY = maxY;
+                            break;
+                        default:
+                            break;
+                    }
+                } else
+                {
+                    newMinX = minX;
+                    newMinY = minY;
+                    newMaxX = maxX;
+                    newMaxY = maxY;
+                }
 
+                //zmena vysky
+                double avgItems = GetAvgNumberOfItemsInLeaves();
+                int newHeight = MaxHeight;
+                if(avgItems > 1)
+                {
+                    double hlpVar = avgItems / MaxHeight;
+                    double increase = MaxHeight * hlpVar;
+                    newHeight = MaxHeight + Convert.ToInt32(Math.Ceiling(increase));
+                } else if(avgItems < 0.3)
+                {
+                    double hlpVar = avgItems * MaxHeight;
+                    double decrease = MaxHeight * hlpVar;
+                    newHeight = MaxHeight - Convert.ToInt32(Math.Ceiling(decrease));
+                }
+
+                newTree = new QuadTree<TKey>(newMinX, newMinY, newMaxX, newMaxY, newHeight);
+                List<QTNode<TKey>> levelOrder = LevelOrder(root);
+
+                foreach  (QTNode<TKey> node in levelOrder)
+                {
+                    foreach (TKey item in node.Records)
+                    {
+                        newTree.Insert(item);
+                    }
+
+                    foreach (TKey item in node.DoesntFitInSon)
+                    {
+                        newTree.Insert(item);
+                    }
+                }
+
+                root = newTree.Root;
+            }
+        }
+
+        private double GetAvgNumberOfItemsInLeaves()
+        {
+            double avg;
+            double leaves = 0, items = 0;
+            List<QTNode<TKey>> nodes = LevelOrder(root);
+            foreach (QTNode<TKey> item in nodes)
+            {
+                if (item.IsLeaf)
+                {
+                    leaves++;
+                    items += item.Records.Count;
                 }
             }
-            return min/max;
+            avg = leaves/ items;
+            return avg;
         }
 
         public int GetNumberOfItemsInTree()

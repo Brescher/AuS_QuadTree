@@ -483,33 +483,35 @@ namespace AuS_QuadTree.QuadTreeFolder
 
                 double newMinX = minX, newMinY = minY, newMaxX = maxX, newMaxY = maxY;
                 double factor = 8 * iteration;
+                double changeX = (maxX - minX) / factor;
+                double changeY = (maxY - minY) / factor;
                 if (maxToOtherRatio > 1)
                 {
                     switch (indexMax)
                     {
                         case 0:
-                            newMinX = minX - (maxX / factor);
-                            newMinY = minY - (maxY / factor);
+                            newMinX = minX - changeX;
+                            newMinY = minY - changeY;
                             newMaxX = maxX;
                             newMaxY = maxY;
                             break;
                         case 1:
                             newMinX = minX;
-                            newMinY = minY - (maxY / factor);
-                            newMaxX = maxX + (maxX / factor);
+                            newMinY = minY - changeY;
+                            newMaxX = maxX + changeX;
                             newMaxY = maxY;
                             break;
                         case 2:
                             newMinX = minX;
                             newMinY = minY;
-                            newMaxX = maxX + (maxX / factor);
-                            newMaxY = maxY + (maxY / factor);
+                            newMaxX = maxX + changeX;
+                            newMaxY = maxY + changeY;
                             break;
                         case 3:
-                            newMinX = minX - (maxX / factor);
+                            newMinX = minX - changeX;
                             newMinY = minY;
                             newMaxX = maxX;
-                            newMaxY = maxY + (maxY / factor);
+                            newMaxY = maxY + changeY;
                             break;
                         default:
                             break;
@@ -522,25 +524,25 @@ namespace AuS_QuadTree.QuadTreeFolder
                         case 0:
                             newMinX = minX;
                             newMinY = minY;
-                            newMaxX = maxX + (maxX / factor);
-                            newMaxY = maxY + (maxY / factor);
+                            newMaxX = maxX + changeX;
+                            newMaxY = maxY + changeY;
                             break;
                         case 1:
-                            newMinX = minX - (maxX / factor);
+                            newMinX = minX - changeX;
                             newMinY = minY;
                             newMaxX = maxX;
-                            newMaxY = maxY + (maxY / factor);
+                            newMaxY = maxY + changeY;
                             break;
                         case 2:
-                            newMinX = minX - (maxX / factor);
-                            newMinY = minY - (maxY / factor);
+                            newMinX = minX - changeX;
+                            newMinY = minY - changeY;
                             newMaxX = maxX;
                             newMaxY = maxY;
                             break;
                         case 3:
                             newMinX = minX;
-                            newMinY = minY - (maxY / factor);
-                            newMaxX = maxX + (maxX / factor);
+                            newMinY = minY - changeY;
+                            newMaxX = maxX + changeX;
                             newMaxY = maxY;
                             break;
                         default:

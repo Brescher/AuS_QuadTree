@@ -1,5 +1,6 @@
 ﻿using AuS_QuadTree.Data;
 using AuS_QuadTree.QuadTreeFolder;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace AuS_QuadTree.ImplementedFeatures
         {
             Parcels = new QuadTree<Parcel>(0, 0, 100000, 100000, 20);
             Estates = new QuadTree<Estate>(0, 0, 100000, 100000, 20);
-            populateTrees();
+            //populateTrees();
+            Load();
         }
 
         public void populateTrees()
@@ -38,31 +40,33 @@ namespace AuS_QuadTree.ImplementedFeatures
 
             for (int i = 0; i < 100000; i++)
             {
-                double X1 = randomGPS1.NextDouble() * (Parcels.MaxX - 200);
-                double Y1 = randomGPS2.NextDouble() * (Parcels.MaxY - 200);
-                double increaseX = increaseXGPS.NextDouble() * 200;
-                double increaseY = increaseYGPS.NextDouble() * 200;
+                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - 200), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - 200), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 200, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 200, 2);
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
 
                 GPS GPS1 = GenerateGPS(X1, Y1);
                 GPS GPS2 = GenerateGPS(X2, Y2);
                 Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
                 Parcels.Insert(parcela);
             }
 
 
             for (int i = 0; i < 100000; i++)
             {
-                double X1 = randomGPS1.NextDouble() * (Parcels.MaxX - 100);
-                double Y1 = randomGPS2.NextDouble() * (Parcels.MaxY - 100);
-                double increaseX = increaseXGPS.NextDouble() * 100;
-                double increaseY = increaseYGPS.NextDouble() * 100;
+                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - 100), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - 100), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 100, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 100, 2);
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
                 GPS GPS1 = GenerateGPS(X1, Y1);
                 GPS GPS2 = GenerateGPS(X2, Y2);
                 Estate nehnutelnost = new Estate(i, $"nehnutelnost {i}", GPS1, GPS2);
+                nehnutelnost.IdentificationKey = i;
                 List<Parcel> parceli = Parcels.Find(X1, Y1, X2, Y2);
                 foreach (Parcel item in parceli)
                 {
@@ -71,6 +75,8 @@ namespace AuS_QuadTree.ImplementedFeatures
                 }
                 Estates.Insert(nehnutelnost);
             }
+
+            Save();
         }
 
         public List<Parcel> FindParcels(double X1, double Y1, double X2, double Y2)
@@ -137,6 +143,163 @@ namespace AuS_QuadTree.ImplementedFeatures
 
             GPS GPS1 = new GPS(latitude, longitude, X1, Y1);
             return GPS1;
+        }
+
+        public void Save()
+        {
+            StringBuilder parcelsText = new StringBuilder();
+            StringBuilder estatesText = new StringBuilder();
+            List<Parcel> dataParcels = parcels.Find(parcels.MinX, parcels.MinY, parcels.MaxX, parcels.MaxY);
+            List<Estate> dataEstates = estates.Find(estates.MinX, estates.MinY, estates.MaxX, estates.MaxY);
+            parcelsText.AppendLine($"{parcels.MinX}; {parcels.MinY}; {parcels.MaxX}; {parcels.MaxY}; {parcels.MaxHeight}");
+            estatesText.AppendLine($"{estates.MinX}; {estates.MinY}; {estates.MaxX}; {estates.MaxY}; {estates.MaxHeight}");
+            foreach (Parcel par in dataParcels)
+            {
+                parcelsText.AppendLine($"{par.Index}; {par.IdentificationKey}; {par.Description}; " +
+                                       $"{par.LowerBound.X}; {par.LowerBound.Y}; " +
+                                       $"{par.UpperBound.X}; {par.UpperBound.Y}");
+            }
+
+            foreach (Estate est in dataEstates)
+            {
+                estatesText.AppendLine($"{est.Index}; {est.IdentificationKey}; {est.Description}; " +
+                                       $"{est.LowerBound.X}; {est.LowerBound.Y}; " +
+                                       $"{est.UpperBound.X}; {est.UpperBound.Y}");
+            }
+
+            File.WriteAllText(@"..\..\..\Data\parcels.csv", parcelsText.ToString());
+            File.WriteAllText(@"..\..\..\Data\estates.csv", estatesText.ToString());
+        }
+
+        public void Load()
+        {
+            LoadParcels();
+            LoadEstates();
+            int i = Parcels.GetNumberOfItemsInTree();
+            int j = Estates.GetNumberOfItemsInTree();
+            CreateReferences();
+        }
+
+        public void LoadParcels()
+        {
+            string filePath = @"..\..\..\Data\parcels.csv"; 
+
+            using (TextFieldParser parser = new TextFieldParser(filePath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+
+                string[] headerFields = parser.ReadFields();
+
+                if (headerFields.Length != 5)
+                {
+                    Console.WriteLine("Invalid header format.");
+                    return;
+                }
+
+                double minX = double.Parse(headerFields[0]);
+                double minY = double.Parse(headerFields[1]);
+                double maxX = double.Parse(headerFields[2]);
+                double maxY = double.Parse(headerFields[3]);
+                int height = int.Parse(headerFields[4]);
+
+                Parcels = new QuadTree<Parcel>(minX, minY, maxX, maxY, height);
+
+                List<Parcel> dataItems = new List<Parcel>();
+
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+
+                    if (fields.Length != 7)
+                    {
+                        Console.WriteLine("Invalid data format.");
+                        return;
+                    }
+
+                    int id = int.Parse(fields[0]);
+                    int key = int.Parse(fields[1]);
+                    string description = fields[2];
+                    double x1 = double.Parse(fields[3]);
+                    double y1 = double.Parse(fields[4]);
+                    double x2 = double.Parse(fields[5]);
+                    double y2 = double.Parse(fields[6]);
+
+                    GPS gps1 = GenerateGPS(x1, y1);
+                    GPS gps2 = GenerateGPS(x2, y2);
+                    Parcel item = new Parcel(id, description, gps1, gps2);
+                    item.IdentificationKey = key;
+                    Parcels.Insert(item);
+                }
+            }
+        }
+
+        public void LoadEstates()
+        {
+            string filePath = @"..\..\..\Data\estates.csv";
+
+            using (TextFieldParser parser = new TextFieldParser(filePath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(";");
+
+                string[] headerFields = parser.ReadFields();
+
+                if (headerFields.Length != 5)
+                {
+                    Console.WriteLine("Invalid header format.");
+                    return;
+                }
+
+                double minX = double.Parse(headerFields[0]);
+                double minY = double.Parse(headerFields[1]);
+                double maxX = double.Parse(headerFields[2]);
+                double maxY = double.Parse(headerFields[3]);
+                int height = int.Parse(headerFields[4]);
+
+                Estates = new QuadTree<Estate>(minX, minY, maxX, maxY, height);
+
+                List<Estate> dataItems = new List<Estate>();
+
+                while (!parser.EndOfData)
+                {
+                    string[] fields = parser.ReadFields();
+
+                    if (fields.Length != 7)
+                    {
+                        Console.WriteLine("Invalid data format.");
+                        return;
+                    }
+
+                    int id = int.Parse(fields[0]);
+                    int key = int.Parse(fields[1]);
+                    string description = fields[2];
+                    double x1 = double.Parse(fields[3]);
+                    double y1 = double.Parse(fields[4]);
+                    double x2 = double.Parse(fields[5]);
+                    double y2 = double.Parse(fields[6]);
+
+                    GPS gps1 = GenerateGPS(x1, y1);
+                    GPS gps2 = GenerateGPS(x2, y2);
+                    Estate item = new Estate(id, description, gps1, gps2);
+                    item.IdentificationKey = key;
+                    Estates.Insert(item);
+                }
+            }
+        }
+
+        public void CreateReferences()
+        {
+            List<Parcel> parceli = Parcels.Find(Parcels.MinX, Parcels.MinY, Parcels.MaxX, Parcels.MaxY);
+            foreach (Parcel par in parceli)
+            {
+                List<Estate> nehnutelnosti = Estates.Find(par.LowerBound.X, par.LowerBound.Y, par.UpperBound.X, par.UpperBound.Y);
+                foreach (Estate est in nehnutelnosti)
+                {
+                    par.LocatedIn.Add(est);
+                    est.LocatedOn.Add(par);
+                }
+            }
         }
     }
 }

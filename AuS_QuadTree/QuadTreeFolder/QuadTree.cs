@@ -448,139 +448,147 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
             else
             {
-                //zmena rozmerov
-                int[] arrayItems = new int[4];
-                for (int i = 0; i < 4; i++)
+                
+                while(iteration <= 3)
                 {
-                    int items = GetNumberOfItemsInSubTree(root.Children[i]);
-                    arrayItems[i] = items;
-                    if (max < items)
+                    //zmena rozmerov
+                    int[] arrayItems = new int[4];
+                    for (int i = 0; i < 4; i++)
                     {
-                        max = items;
-                        indexMax = i;
+                        int items = GetNumberOfItemsInSubTree(root.Children[i]);
+                        arrayItems[i] = items;
+                        if (max < items)
+                        {
+                            max = items;
+                            indexMax = i;
+                        }
+                        if (min > items)
+                        {
+                            min = items;
+                            indexMin = i;
+                        }
+                        allExceptMax += items;
+                        allExceptMin += items;
                     }
-                    if (min > items)
+                    allExceptMax -= max;
+                    allExceptMin -= min;
+
+                    for (int i = 0; i < 4; i++)
                     {
-                        min = items;
-                        indexMin = i;
+                        if (i != indexMin)
+                        {
+                            minToOtherRatioSum += min / arrayItems[i];
+                        }
                     }
-                    allExceptMax += items;
-                    allExceptMin += items;
-                }
-                allExceptMax -= max;
-                allExceptMin -= min;
 
-                for (int i = 0; i < 4; i++)
-                {
-                    if (i != indexMin)
+                    maxToOtherRatio = max / allExceptMax;
+
+
+                    double newMinX = minX, newMinY = minY, newMaxX = maxX, newMaxY = maxY;
+                    double factor = Math.Pow(2, 2 + iteration);
+                    double changeX = (maxX - minX) / factor;
+                    double changeY = (maxY - minY) / factor;
+                    if (maxToOtherRatio > 1)
                     {
-                        minToOtherRatioSum += min / arrayItems[i];
+                        switch (indexMax)
+                        {
+                            case 0:
+                                newMinX = minX - changeX;
+                                newMinY = minY - changeY;
+                                newMaxX = maxX;
+                                newMaxY = maxY;
+                                break;
+                            case 1:
+                                newMinX = minX;
+                                newMinY = minY - changeY;
+                                newMaxX = maxX + changeX;
+                                newMaxY = maxY;
+                                break;
+                            case 2:
+                                newMinX = minX;
+                                newMinY = minY;
+                                newMaxX = maxX + changeX;
+                                newMaxY = maxY + changeY;
+                                break;
+                            case 3:
+                                newMinX = minX - changeX;
+                                newMinY = minY;
+                                newMaxX = maxX;
+                                newMaxY = maxY + changeY;
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
-
-                maxToOtherRatio = max / allExceptMax;
-
-
-                double newMinX = minX, newMinY = minY, newMaxX = maxX, newMaxY = maxY;
-                double factor = 8 * iteration;
-                double changeX = (maxX - minX) / factor;
-                double changeY = (maxY - minY) / factor;
-                if (maxToOtherRatio > 1)
-                {
-                    switch (indexMax)
+                    else if (minToOtherRatioSum < 1)
                     {
-                        case 0:
-                            newMinX = minX - changeX;
-                            newMinY = minY - changeY;
-                            newMaxX = maxX;
-                            newMaxY = maxY;
-                            break;
-                        case 1:
-                            newMinX = minX;
-                            newMinY = minY - changeY;
-                            newMaxX = maxX + changeX;
-                            newMaxY = maxY;
-                            break;
-                        case 2:
-                            newMinX = minX;
-                            newMinY = minY;
-                            newMaxX = maxX + changeX;
-                            newMaxY = maxY + changeY;
-                            break;
-                        case 3:
-                            newMinX = minX - changeX;
-                            newMinY = minY;
-                            newMaxX = maxX;
-                            newMaxY = maxY + changeY;
-                            break;
-                        default:
-                            break;
+                        switch (indexMax)
+                        {
+                            case 0:
+                                newMinX = minX;
+                                newMinY = minY;
+                                newMaxX = maxX + changeX;
+                                newMaxY = maxY + changeY;
+                                break;
+                            case 1:
+                                newMinX = minX - changeX;
+                                newMinY = minY;
+                                newMaxX = maxX;
+                                newMaxY = maxY + changeY;
+                                break;
+                            case 2:
+                                newMinX = minX - changeX;
+                                newMinY = minY - changeY;
+                                newMaxX = maxX;
+                                newMaxY = maxY;
+                                break;
+                            case 3:
+                                newMinX = minX;
+                                newMinY = minY - changeY;
+                                newMaxX = maxX + changeX;
+                                newMaxY = maxY;
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
-                else if (minToOtherRatioSum < 1)
-                {
-                    switch (indexMax)
+                    else
                     {
-                        case 0:
-                            newMinX = minX;
-                            newMinY = minY;
-                            newMaxX = maxX + changeX;
-                            newMaxY = maxY + changeY;
-                            break;
-                        case 1:
-                            newMinX = minX - changeX;
-                            newMinY = minY;
-                            newMaxX = maxX;
-                            newMaxY = maxY + changeY;
-                            break;
-                        case 2:
-                            newMinX = minX - changeX;
-                            newMinY = minY - changeY;
-                            newMaxX = maxX;
-                            newMaxY = maxY;
-                            break;
-                        case 3:
-                            newMinX = minX;
-                            newMinY = minY - changeY;
-                            newMaxX = maxX + changeX;
-                            newMaxY = maxY;
-                            break;
-                        default:
-                            break;
+                        newMinX = minX;
+                        newMinY = minY;
+                        newMaxX = maxX;
+                        newMaxY = maxY;
                     }
-                }
-                else
-                {
-                    newMinX = minX;
-                    newMinY = minY;
-                    newMaxX = maxX;
-                    newMaxY = maxY;
-                }
 
-                //zmena vysky
-                double avgItems = GetAvgNumberOfItemsInLeaves();
-                int newHeight = MaxHeight;
-                if (avgItems > 1)
-                {
-                    double hlpVar = avgItems / MaxHeight;
-                    double increase = MaxHeight * hlpVar;
-                    newHeight = MaxHeight + Convert.ToInt32(Math.Ceiling(increase));
-                }
-                else if (avgItems < 0.3)
-                {
-                    double hlpVar = avgItems * MaxHeight;
-                    double decrease = MaxHeight * hlpVar;
-                    newHeight = MaxHeight - Convert.ToInt32(Math.Ceiling(decrease));
-                }
+                    //zmena vysky
+                    double avgItems = GetAvgNumberOfItemsInLeaves();
+                    int newHeight = MaxHeight;
+                    if (avgItems > 1)
+                    {
+                        double increase = Math.Log(avgItems);
+                        newHeight = MaxHeight + Convert.ToInt32(Math.Ceiling(increase));
+                    }
+                    else if (avgItems < 0.3)
+                    {
+                        double hlpVar = avgItems * MaxHeight;
+                        double decrease = MaxHeight * avgItems;
+                        newHeight = MaxHeight - Convert.ToInt32(Math.Floor(decrease));
+                    }
 
-                if (newMinX != minX || newMaxX != maxX || newMinY != minY || newMaxY != maxY)
-                {
-                    Optimize(newMinX, newMinY, newMaxX, newMaxY, newHeight);
+                    if (newMinX != minX || newMaxX != maxX || newMinY != minY || newMaxY != maxY)
+                    {
+                        Optimize(newMinX, newMinY, newMaxX, newMaxY, newHeight);
+                    }
+                    else if (newHeight != maxHeight)
+                    {
+                        ChangeHeight(newHeight);
+                    } else
+                    {
+                        iteration = 4;
+                    }
+                    iteration++;
                 }
-                else if (newHeight != maxHeight)
-                {
-                    ChangeHeight(newHeight);
-                }
+                
             }
         }
 
@@ -612,13 +620,13 @@ namespace AuS_QuadTree.QuadTreeFolder
             List<QTNode<TKey>> nodes = LevelOrder(root);
             foreach (QTNode<TKey> item in nodes)
             {
-                if (item.IsLeaf)
+                if (item.IsLeaf && item.Height == maxHeight)
                 {
                     leaves++;
                     items += item.Records.Count;
                 }
             }
-            avg = leaves/ items;
+            avg = items / leaves;
             return avg;
         }
 

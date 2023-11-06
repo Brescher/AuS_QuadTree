@@ -24,26 +24,18 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         public Features()
         {
-            Parcels = new QuadTree<Parcel>(0, 0, 100000, 100000, 7);
-            Estates = new QuadTree<Estate>(0, 0, 100000, 100000, 7);
-            populateTrees();
-            //Parcels.TreeHealth();
-            //Load();
+
         }
 
-        public void populateTrees()
+        public void PopulateParcels(double x1, double y1, double x2, double y2, int height, int numberItems)
         {
+            parcels = new QuadTree<Parcel>(x1, y1, x2, y2, height);
             Random randomGPS1 = new Random();
             Random randomGPS2 = new Random();
             Random increaseXGPS = new Random();
             Random increaseYGPS = new Random();
 
-            Random randomGPS1Es = new Random();
-            Random randomGPS2Es = new Random();
-            Random increaseXGPSEs = new Random();
-            Random increaseYGPSEs = new Random();
-
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < numberItems; i++)
             {
                 double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - 200), 2);
                 double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - 200), 2);
@@ -58,7 +50,16 @@ namespace AuS_QuadTree.ImplementedFeatures
                 parcela.IdentificationKey = i;
                 Parcels.Insert(parcela);
             }
+        }
 
+        public void PopulateEstates(double x1, double y1, double x2, double y2, int height, int numberItems)
+        {
+            estates = new QuadTree<Estate>(x1, y1, x2, y2, height);
+
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
 
             for (int i = 0; i < 100000; i++)
             {

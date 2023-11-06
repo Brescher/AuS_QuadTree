@@ -312,5 +312,35 @@ namespace AuS_QuadTree
                     break;
             }
         }
+
+        private void save_Click(object sender, EventArgs e)
+        {
+            feat.Save();
+        }
+
+        private void load_Click(object sender, EventArgs e)
+        {
+            feat.Load();
+        }
+
+        private void Populate_Click(object sender, EventArgs e)
+        {
+            double pX1 = Convert.ToDouble(parcelsX1.Text);
+            double pY1 = Convert.ToDouble(parcelsY1.Text);
+            double pX2 = Convert.ToDouble(parcelsX2.Text);
+            double pY2 = Convert.ToDouble(parcelsY2.Text);
+            int pHeight = Convert.ToInt32(parcelsHeight.Text);
+            int pItems = Convert.ToInt32(parcelsItems.Text);
+
+            double eX1 = Convert.ToDouble(estatesX1.Text);
+            double eY1 = Convert.ToDouble(estatesY1.Text);
+            double eX2 = Convert.ToDouble(estatesX2.Text);
+            double eY2 = Convert.ToDouble(estatesY2.Text);
+            int eHeight = Convert.ToInt32(estatesHeight.Text);
+            int eItems = Convert.ToInt32(estatesItems.Text);
+
+            feat.PopulateParcels(pX1, pY1, pX2, pY2, pHeight, pItems);
+            feat.PopulateEstates(eX1, eY1, eX2, eY2, eHeight, eItems);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -438,10 +439,8 @@ namespace AuS_QuadTree.QuadTreeFolder
 
         public void TreeHealth()
         {
+            int iteration = 1;
 
-            double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
-            double maxToOtherRatio = 0, minToOtherRatioSum = 0;
-            int indexMax = 0, indexMin = 0, iteration = 1;
             if (root.IsLeaf)
             {
                 return;
@@ -451,6 +450,9 @@ namespace AuS_QuadTree.QuadTreeFolder
                 
                 while(iteration <= 3)
                 {
+                    double max = 0, min = int.MaxValue, other1 = 0, other2 = 0, allExceptMax = 0, allExceptMin = 0;
+                    double maxToOtherRatio = 0, minToOtherRatioSum = 0;
+                    int indexMax = 0, indexMin = 0;
                     //zmena rozmerov
                     int[] arrayItems = new int[4];
                     for (int i = 0; i < 4; i++)
@@ -609,7 +611,11 @@ namespace AuS_QuadTree.QuadTreeFolder
                     newTree.Insert(item);
                 }
             }
-
+            minX = newMinX;
+            minY = newMinY;
+            maxX = newMaxY;
+            maxY = newMaxY;
+            maxHeight = newHeight;
             root = newTree.Root;
         }
 

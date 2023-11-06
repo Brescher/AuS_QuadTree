@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AuS_QuadTree.ImplementedFeatures
 {
@@ -14,6 +15,9 @@ namespace AuS_QuadTree.ImplementedFeatures
     {
         QuadTree<Parcel> parcels;
         QuadTree<Estate> estates;
+
+        List<Parcel> parceli = new List<Parcel>();
+        List<Estate> nehnutelnosti = new List<Estate>();
 
         public QuadTree<Parcel> Parcels { get => parcels; set => parcels = value; }
         public QuadTree<Estate> Estates { get => estates; set => estates = value; }
@@ -23,7 +27,7 @@ namespace AuS_QuadTree.ImplementedFeatures
             Parcels = new QuadTree<Parcel>(0, 0, 100000, 100000, 7);
             Estates = new QuadTree<Estate>(0, 0, 100000, 100000, 7);
             populateTrees();
-            Parcels.TreeHealth();
+            //Parcels.TreeHealth();
             //Load();
         }
 
@@ -76,29 +80,28 @@ namespace AuS_QuadTree.ImplementedFeatures
                 }
                 Estates.Insert(nehnutelnost);
             }
-
-            Save();
         }
 
         public List<Parcel> FindParcels(double X1, double Y1, double X2, double Y2)
         {
-            return Parcels.Find(X1, Y1, X2, Y2);
+            return parceli = Parcels.Find(X1, Y1, X2, Y2);
         }
 
         public List<Estate> FindEstates(double X1, double Y1, double X2, double Y2)
         {
-            return Estates.Find(X1, Y1, X2, Y2);
+            return nehnutelnosti = Estates.Find(X1, Y1, X2, Y2);
         }
 
 
-        public void AddParcel(int index_, string description_, double X1, double Y1, double X2, double Y2)
+        public void AddParcel(int index_, int key_, string description_, double X1, double Y1, double X2, double Y2)
         {
             GPS GPS1 = GenerateGPS(X1, Y1);
             GPS GPS2 = GenerateGPS(X2, Y2);
 
             Parcel parcela = new Parcel(index_, description_, GPS1, GPS2);
-            List<Estate> nehnutelnosti = Estates.Find(GPS1.X, GPS1.Y, GPS2.X, GPS2.Y);
-            foreach (Estate item in nehnutelnosti)
+            parcela.IdentificationKey = key_;
+            List<Estate> est = Estates.Find(GPS1.X, GPS1.Y, GPS2.X, GPS2.Y);
+            foreach (Estate item in est)
             {
                 item.LocatedOn.Add(parcela);
                 parcela.LocatedIn.Add(item);
@@ -106,19 +109,40 @@ namespace AuS_QuadTree.ImplementedFeatures
             Parcels.Insert(parcela);
         }
 
-        public void AddEstate(int index_, string description_, double X1, double Y1, double X2, double Y2)
+        public void AddEstate(int index_, int key_, string description_, double X1, double Y1, double X2, double Y2)
         {
             GPS GPS1 = GenerateGPS(X1, Y1);
             GPS GPS2 = GenerateGPS(X2, Y2);
 
             Estate nehnutelnost = new Estate(index_, description_, GPS1, GPS2);
-            List<Parcel> parceli = Parcels.Find(GPS1.X, GPS1.Y, GPS2.X, GPS2.Y);
-            foreach (Parcel item in parceli)
+            nehnutelnost.IdentificationKey = key_;
+            List<Parcel> par = Parcels.Find(GPS1.X, GPS1.Y, GPS2.X, GPS2.Y);
+            foreach (Parcel item in par)
             {
                 item.LocatedIn.Add(nehnutelnost);
                 nehnutelnost.LocatedOn.Add(item);
             }
             Estates.Insert(nehnutelnost);
+        }
+
+        public void DeleteParcel(Parcel parcel)
+        {
+            parcels.Delete(parcel);
+            List<Estate> est = estates.Find(parcel.LowerBound.X, parcel.LowerBound.Y, parcel.UpperBound.X, parcel.UpperBound.Y);
+            foreach (Estate item in est)
+            {
+                item.LocatedOn.Remove(parcel);
+            }
+        }
+
+        public void DeleteEstate(Estate estate)
+        {
+            estates.Delete(estate);
+            List<Parcel> par = parcels.Find(estate.LowerBound.X, estate.LowerBound.Y, estate.UpperBound.X, estate.UpperBound.Y);
+            foreach (Parcel item in par)
+            {
+                item.LocatedIn.Remove(estate);
+            }
         }
 
         public GPS GenerateGPS(double X1, double Y1)

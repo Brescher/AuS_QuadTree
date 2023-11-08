@@ -18,12 +18,12 @@ namespace AuS_QuadTree.Data
         public double Y { get => y; set => y = value; }
         #endregion
 
-        public GPS(char latitude, char longitude, double latitudeAccuracy, double longitudeAccuracy)
+        public GPS(char latitude, char longitude, double x_, double y_)
         {
             this.Latitude = latitude;
             this.Longitude = longitude;
-            this.X = latitudeAccuracy;
-            this.Y = longitudeAccuracy;
+            this.X = x_;
+            this.Y = y_;
         }
         
     }

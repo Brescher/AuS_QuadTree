@@ -120,6 +120,7 @@
             tabPage1 = new TabPage();
             tabPage4 = new TabPage();
             tabPage5 = new TabPage();
+            tabPage6 = new TabPage();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -366,11 +367,11 @@
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { No, Id, KeyCol, dataGridViewTextBoxColumn1, LowerX, LowerY, UpperX, UpperY, SpanFrom, SpanTo });
-            dataGridView1.Location = new Point(12, 393);
+            dataGridView1.Location = new Point(12, 304);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(1130, 421);
+            dataGridView1.Size = new Size(1130, 510);
             dataGridView1.TabIndex = 32;
             // 
             // No
@@ -648,6 +649,7 @@
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage4);
             tabControl1.Controls.Add(tabPage5);
+            tabControl1.Controls.Add(tabPage6);
             tabControl1.Location = new Point(185, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -954,6 +956,16 @@
             tabPage5.Text = "Delete data";
             tabPage5.UseVisualStyleBackColor = true;
             // 
+            // tabPage6
+            // 
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Padding = new Padding(3);
+            tabPage6.Size = new Size(600, 171);
+            tabPage6.TabIndex = 6;
+            tabPage6.Text = "Optimize";
+            tabPage6.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1073,5 +1085,6 @@
         private TabPage tabPage1;
         private TabPage tabPage4;
         private TabPage tabPage5;
+        private TabPage tabPage6;
     }
 }

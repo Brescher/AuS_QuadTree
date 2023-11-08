@@ -594,7 +594,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
         }
 
-        public void Optimize(double newMinX, double newMinY, double newMaxX, double newMaxY, int newHeight)
+        private void Optimize(double newMinX, double newMinY, double newMaxX, double newMaxY, int newHeight)
         {
             QuadTree<TKey> newTree = new QuadTree<TKey>(newMinX, newMinY, newMaxX, newMaxY, newHeight);
             List<QTNode<TKey>> levelOrder = LevelOrder(root);

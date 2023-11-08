@@ -4,6 +4,7 @@ using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         public Features()
         {
-
+            TestOptimalization();
         }
 
         public void PopulateParcels(double x1, double y1, double x2, double y2, int height, int numberItems)
@@ -326,6 +327,106 @@ namespace AuS_QuadTree.ImplementedFeatures
                     est.LocatedOn.Add(par);
                 }
             }
+        }
+
+        public void TestOptimalization()
+        {
+            QuadTree<Parcel> parcelsTest = new QuadTree<Parcel>(0, 0, 10000000, 10000000, 5);
+            Random randomGPS1 = new Random();
+            Random randomGPS2 = new Random();
+            Random increaseXGPS = new Random();
+            Random increaseYGPS = new Random();
+            double x = (parcelsTest.MaxX - parcelsTest.MinX) / 2;
+            double y = (parcelsTest.MaxY - parcelsTest.MinY) / 2;
+
+            for (int i = 0; i < 1000000; i++)
+            {
+                double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 200, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 200, 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
+                parcelsTest.Insert(parcela);
+            }
+
+            int key = parcelsTest.GetNumberOfItemsInTree();
+            double msInsertUnoptimalized = 0;
+            double msDeleteUnoptimalized = 0;
+            Stopwatch stopwatchInsert = new Stopwatch();
+            Stopwatch stopwatchDelete = new Stopwatch();
+            for (int i = 0; i < 100000; i++)
+            {
+                double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = key + 1;
+                //toto merat
+                stopwatchInsert.Start();
+                parcelsTest.Insert(parcela);
+                stopwatchInsert.Stop();
+                msInsertUnoptimalized += stopwatchInsert.ElapsedMilliseconds;
+
+                //toto merat
+                stopwatchDelete.Start();
+                parcelsTest.Delete(parcela);
+                stopwatchDelete.Stop();
+                msDeleteUnoptimalized += stopwatchDelete.ElapsedMilliseconds;
+
+
+            }
+
+            parcelsTest.TreeHealth();
+
+
+
+            int items = parcelsTest.GetNumberOfItemsInTree();
+            double msInsertOptimalized = 0;
+            double msDeleteOptimalized = 0;
+            Stopwatch stopwatchInsertOpt = new Stopwatch();
+            Stopwatch stopwatchDeleteOpt = new Stopwatch();
+            for (int i = 0; i < 100000; i++)
+            {
+                double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = key + 1;
+                //toto merat
+                stopwatchInsertOpt.Start();
+                parcelsTest.Insert(parcela);
+                stopwatchInsertOpt.Stop();
+                msInsertOptimalized += stopwatchInsertOpt.ElapsedMilliseconds;
+                //toto merat
+                stopwatchDeleteOpt.Start();
+                parcelsTest.Delete(parcela);
+                stopwatchDeleteOpt.Stop();
+                msDeleteOptimalized += stopwatchDeleteOpt.ElapsedMilliseconds;
+            }
+
+
+            double avgInsert = stopwatchInsert.ElapsedMilliseconds / 100000d;//msInsertUnoptimalized / 100000;//stopwatchInsert.ElapsedMilliseconds / 100000d;
+            double avgDelete = stopwatchDelete.ElapsedMilliseconds / 100000d;//msDeleteUnoptimalized / 100000;//stopwatchDelete.ElapsedMilliseconds / 100000d;
+            double avgInsertOpt = stopwatchInsertOpt.ElapsedMilliseconds / 100000d;//msInsertOptimalized / 100000d; //stopwatchInsertOpt.ElapsedMilliseconds / 100000d;
+            double avgDeleteOpt = stopwatchDeleteOpt.ElapsedMilliseconds / 100000d;//msDeleteOptimalized / 100000d; //stopwatchDeleteOpt.ElapsedMilliseconds / 100000d;
         }
     }
 }

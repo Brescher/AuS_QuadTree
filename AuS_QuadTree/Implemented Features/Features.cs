@@ -25,10 +25,10 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         public Features()
         {
-            TestOptimalization();
+            //TestOptimalization();
         }
 
-        public void PopulateParcels(double x1, double y1, double x2, double y2, int height, int numberItems)
+        public void PopulateParcels(double x1, double y1, double x2, double y2, int height, int numberItems, double maxWidth, double maxLength)
         {
             parcels = new QuadTree<Parcel>(x1, y1, x2, y2, height);
             Random randomGPS1 = new Random();
@@ -38,10 +38,10 @@ namespace AuS_QuadTree.ImplementedFeatures
 
             for (int i = 0; i < numberItems; i++)
             {
-                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - 200), 2);
-                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - 200), 2);
-                double increaseX = Math.Round(increaseXGPS.NextDouble() * 200, 2);
-                double increaseY = Math.Round(increaseYGPS.NextDouble() * 200, 2);
+                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - maxWidth), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - maxLength), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * maxWidth, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * maxLength, 2);
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
 
@@ -53,7 +53,7 @@ namespace AuS_QuadTree.ImplementedFeatures
             }
         }
 
-        public void PopulateEstates(double x1, double y1, double x2, double y2, int height, int numberItems)
+        public void PopulateEstates(double x1, double y1, double x2, double y2, int height, int numberItems, double maxWidth, double maxLength)
         {
             estates = new QuadTree<Estate>(x1, y1, x2, y2, height);
 
@@ -62,12 +62,12 @@ namespace AuS_QuadTree.ImplementedFeatures
             Random increaseXGPS = new Random();
             Random increaseYGPS = new Random();
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < numberItems; i++)
             {
-                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - 100), 2);
-                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - 100), 2);
-                double increaseX = Math.Round(increaseXGPS.NextDouble() * 100, 2);
-                double increaseY = Math.Round(increaseYGPS.NextDouble() * 100, 2);
+                double X1 = Math.Round(randomGPS1.NextDouble() * (Parcels.MaxX - maxWidth), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (Parcels.MaxY - maxLength), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * maxWidth, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * maxLength, 2);
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
                 GPS GPS1 = GenerateGPS(X1, Y1);
@@ -329,7 +329,13 @@ namespace AuS_QuadTree.ImplementedFeatures
             }
         }
 
-        public void TestOptimalization()
+        public void Optimize()
+        {
+            Parcels.TreeHealth();
+            Estates.TreeHealth();
+        }
+
+        private void TestOptimalization()
         {
             QuadTree<Parcel> parcelsTest = new QuadTree<Parcel>(0, 0, 10000000, 10000000, 5);
             Random randomGPS1 = new Random();

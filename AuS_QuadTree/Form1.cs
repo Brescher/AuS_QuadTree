@@ -27,6 +27,7 @@ namespace AuS_QuadTree
 
         private void findParcels_Click(object sender, EventArgs e)
         {
+            parcels.Clear();
             parcels = feat.FindParcels(Convert.ToDouble(X1.Text), Convert.ToDouble(Y1.Text), Convert.ToDouble(X2.Text), Convert.ToDouble(Y2.Text));
             int i = 1;
             dataGridView1.Rows.Clear();
@@ -41,6 +42,7 @@ namespace AuS_QuadTree
 
         private void findEstates_Click(object sender, EventArgs e)
         {
+            estates.Clear();
             estates = feat.FindEstates(Convert.ToDouble(X1.Text), Convert.ToDouble(Y1.Text), Convert.ToDouble(X2.Text), Convert.ToDouble(Y2.Text));
             int i = 1;
             dataGridView1.Rows.Clear();
@@ -55,6 +57,8 @@ namespace AuS_QuadTree
 
         private void findBoth_Click(object sender, EventArgs e)
         {
+            parcels.Clear();
+            estates.Clear();
             parcels = feat.FindParcels(Convert.ToDouble(X1.Text), Convert.ToDouble(Y1.Text), Convert.ToDouble(X2.Text), Convert.ToDouble(Y2.Text));
             estates = feat.FindEstates(Convert.ToDouble(X1.Text), Convert.ToDouble(Y1.Text), Convert.ToDouble(X2.Text), Convert.ToDouble(Y2.Text));
             int i = 1;
@@ -67,7 +71,7 @@ namespace AuS_QuadTree
             }
             foreach (Estate item in estates)
             {
-                dataGridView1.Rows.Add(i, item.Index, item.Description, item.IdentificationKey, Math.Round(item.LowerBound.X, 2), Math.Round(item.LowerBound.Y, 2), Math.Round(item.UpperBound.X, 2), Math.Round(item.UpperBound.Y, 2),
+                dataGridView1.Rows.Add(i, item.Index, item.IdentificationKey, item.Description, Math.Round(item.LowerBound.X, 2), Math.Round(item.LowerBound.Y, 2), Math.Round(item.UpperBound.X, 2), Math.Round(item.UpperBound.Y, 2),
                      item.LowerBound.Latitude + " | " + item.LowerBound.Longitude, item.UpperBound.Latitude + " | " + item.UpperBound.Longitude);
                 i++;
             }
@@ -331,6 +335,8 @@ namespace AuS_QuadTree
             double pY2 = Convert.ToDouble(parcelsY2.Text);
             int pHeight = Convert.ToInt32(parcelsHeight.Text);
             int pItems = Convert.ToInt32(parcelsItems.Text);
+            double pMaxW = Convert.ToDouble(pMaxWidth.Text);
+            double pMaxL = Convert.ToDouble(pMaxLength.Text);
 
             double eX1 = Convert.ToDouble(estatesX1.Text);
             double eY1 = Convert.ToDouble(estatesY1.Text);
@@ -338,9 +344,16 @@ namespace AuS_QuadTree
             double eY2 = Convert.ToDouble(estatesY2.Text);
             int eHeight = Convert.ToInt32(estatesHeight.Text);
             int eItems = Convert.ToInt32(estatesItems.Text);
+            double eMaxW = Convert.ToDouble(eMaxWidth.Text);
+            double eMaxL = Convert.ToDouble(eMaxLength.Text);
 
-            feat.PopulateParcels(pX1, pY1, pX2, pY2, pHeight, pItems);
-            feat.PopulateEstates(eX1, eY1, eX2, eY2, eHeight, eItems);
+            feat.PopulateParcels(pX1, pY1, pX2, pY2, pHeight, pItems, pMaxW, pMaxL);
+            feat.PopulateEstates(eX1, eY1, eX2, eY2, eHeight, eItems, eMaxW, eMaxL);
+        }
+
+        private void optimizeBtn_Click(object sender, EventArgs e)
+        {
+            feat.Optimize();
         }
     }
 }

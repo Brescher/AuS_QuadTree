@@ -95,6 +95,14 @@
             parcelsItems = new TextBox();
             tabControl1 = new TabControl();
             tabPage2 = new TabPage();
+            label37 = new Label();
+            label36 = new Label();
+            label35 = new Label();
+            eMaxLength = new TextBox();
+            eMaxWidth = new TextBox();
+            pMaxLength = new TextBox();
+            pMaxWidth = new TextBox();
+            label34 = new Label();
             Populate = new Button();
             label33 = new Label();
             label32 = new Label();
@@ -121,6 +129,7 @@
             tabPage4 = new TabPage();
             tabPage5 = new TabPage();
             tabPage6 = new TabPage();
+            optimizeBtn = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -128,6 +137,7 @@
             tabPage1.SuspendLayout();
             tabPage4.SuspendLayout();
             tabPage5.SuspendLayout();
+            tabPage6.SuspendLayout();
             SuspendLayout();
             // 
             // X1
@@ -653,11 +663,19 @@
             tabControl1.Location = new Point(185, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(608, 199);
+            tabControl1.Size = new Size(692, 199);
             tabControl1.TabIndex = 61;
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(label37);
+            tabPage2.Controls.Add(label36);
+            tabPage2.Controls.Add(label35);
+            tabPage2.Controls.Add(eMaxLength);
+            tabPage2.Controls.Add(eMaxWidth);
+            tabPage2.Controls.Add(pMaxLength);
+            tabPage2.Controls.Add(pMaxWidth);
+            tabPage2.Controls.Add(label34);
             tabPage2.Controls.Add(Populate);
             tabPage2.Controls.Add(label33);
             tabPage2.Controls.Add(label32);
@@ -688,14 +706,78 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(600, 171);
+            tabPage2.Size = new Size(684, 171);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Populate tree";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Location = new Point(499, 103);
+            label37.Name = "label37";
+            label37.Size = new Size(67, 15);
+            label37.TabIndex = 88;
+            label37.Text = "Max length";
+            // 
+            // label36
+            // 
+            label36.AutoSize = true;
+            label36.Location = new Point(421, 103);
+            label36.Name = "label36";
+            label36.Size = new Size(63, 15);
+            label36.TabIndex = 87;
+            label36.Text = "Max width";
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Location = new Point(499, 40);
+            label35.Name = "label35";
+            label35.Size = new Size(67, 15);
+            label35.TabIndex = 86;
+            label35.Text = "Max length";
+            // 
+            // eMaxLength
+            // 
+            eMaxLength.Location = new Point(499, 121);
+            eMaxLength.Name = "eMaxLength";
+            eMaxLength.Size = new Size(72, 23);
+            eMaxLength.TabIndex = 85;
+            // 
+            // eMaxWidth
+            // 
+            eMaxWidth.Location = new Point(421, 121);
+            eMaxWidth.Name = "eMaxWidth";
+            eMaxWidth.Size = new Size(72, 23);
+            eMaxWidth.TabIndex = 84;
+            // 
+            // pMaxLength
+            // 
+            pMaxLength.Location = new Point(499, 58);
+            pMaxLength.Name = "pMaxLength";
+            pMaxLength.Size = new Size(72, 23);
+            pMaxLength.TabIndex = 83;
+            // 
+            // pMaxWidth
+            // 
+            pMaxWidth.Location = new Point(421, 58);
+            pMaxWidth.Name = "pMaxWidth";
+            pMaxWidth.Size = new Size(72, 23);
+            pMaxWidth.TabIndex = 82;
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(421, 40);
+            label34.Name = "label34";
+            label34.Size = new Size(63, 15);
+            label34.TabIndex = 81;
+            label34.Text = "Max width";
+            // 
             // Populate
             // 
-            Populate.Location = new Point(481, 121);
+            Populate.Location = new Point(592, 121);
             Populate.Name = "Populate";
             Populate.Size = new Size(75, 23);
             Populate.TabIndex = 80;
@@ -814,7 +896,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(3, 84);
+            label21.Location = new Point(3, 88);
             label21.Name = "label21";
             label21.Size = new Size(43, 15);
             label21.TabIndex = 68;
@@ -823,7 +905,7 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Location = new Point(6, 10);
+            label20.Location = new Point(3, 25);
             label20.Name = "label20";
             label20.Size = new Size(44, 15);
             label20.TabIndex = 67;
@@ -887,7 +969,7 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(600, 171);
+            tabPage3.Size = new Size(684, 171);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Find data";
             tabPage3.UseVisualStyleBackColor = true;
@@ -913,7 +995,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(600, 171);
+            tabPage1.Size = new Size(684, 171);
             tabPage1.TabIndex = 3;
             tabPage1.Text = "Insert data";
             tabPage1.UseVisualStyleBackColor = true;
@@ -938,7 +1020,7 @@
             tabPage4.Location = new Point(4, 24);
             tabPage4.Name = "tabPage4";
             tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(600, 171);
+            tabPage4.Size = new Size(684, 171);
             tabPage4.TabIndex = 4;
             tabPage4.Text = "Edit data";
             tabPage4.UseVisualStyleBackColor = true;
@@ -951,20 +1033,31 @@
             tabPage5.Location = new Point(4, 24);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(600, 171);
+            tabPage5.Size = new Size(684, 171);
             tabPage5.TabIndex = 5;
             tabPage5.Text = "Delete data";
             tabPage5.UseVisualStyleBackColor = true;
             // 
             // tabPage6
             // 
+            tabPage6.Controls.Add(optimizeBtn);
             tabPage6.Location = new Point(4, 24);
             tabPage6.Name = "tabPage6";
             tabPage6.Padding = new Padding(3);
-            tabPage6.Size = new Size(600, 171);
+            tabPage6.Size = new Size(684, 171);
             tabPage6.TabIndex = 6;
             tabPage6.Text = "Optimize";
             tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // optimizeBtn
+            // 
+            optimizeBtn.Location = new Point(6, 6);
+            optimizeBtn.Name = "optimizeBtn";
+            optimizeBtn.Size = new Size(105, 31);
+            optimizeBtn.TabIndex = 0;
+            optimizeBtn.Text = "Optimize trees";
+            optimizeBtn.UseVisualStyleBackColor = true;
+            optimizeBtn.Click += optimizeBtn_Click;
             // 
             // Form1
             // 
@@ -989,6 +1082,7 @@
             tabPage4.PerformLayout();
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
+            tabPage6.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1086,5 +1180,14 @@
         private TabPage tabPage4;
         private TabPage tabPage5;
         private TabPage tabPage6;
+        private Button optimizeBtn;
+        private Label label37;
+        private Label label36;
+        private Label label35;
+        private TextBox eMaxLength;
+        private TextBox eMaxWidth;
+        private TextBox pMaxLength;
+        private TextBox pMaxWidth;
+        private Label label34;
     }
 }

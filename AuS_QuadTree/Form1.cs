@@ -325,6 +325,17 @@ namespace AuS_QuadTree
         private void load_Click(object sender, EventArgs e)
         {
             feat.Load();
+            string text = $"Parcel quad tree info: " +
+                          $"\r\n    min X: {feat.Parcels.MinX}  " +
+                          $"\r\n    min Y: {feat.Parcels.MinY}  " +
+                          $"\r\n    max X: {feat.Parcels.MaxX}  " +
+                          $"\r\n    max Y: {feat.Parcels.MaxY}  " +
+                          $"\r\nEstate quad tree info: " +
+                          $"\r\n    min X: {feat.Estates.MinX}  " +
+                          $"\r\n    min Y: {feat.Estates.MinY}  " +
+                          $"\r\n    max X: {feat.Estates.MaxX}  " +
+                          $"\r\n    max Y: {feat.Estates.MaxY}  ";
+            info.Text = text;
         }
 
         private void Populate_Click(object sender, EventArgs e)
@@ -349,11 +360,36 @@ namespace AuS_QuadTree
 
             feat.PopulateParcels(pX1, pY1, pX2, pY2, pHeight, pItems, pMaxW, pMaxL);
             feat.PopulateEstates(eX1, eY1, eX2, eY2, eHeight, eItems, eMaxW, eMaxL);
+
+            string text = $"Parcel quad tree info: " +
+                          $"\r\n    min X: {feat.Parcels.MinX}  " +
+                          $"\r\n    min Y: {feat.Parcels.MinY}  " +
+                          $"\r\n    max X: {feat.Parcels.MaxX}  " +
+                          $"\r\n    max Y: {feat.Parcels.MaxY}  " +
+                          $"\r\nEstate quad tree info: " +
+                          $"\r\n    min X: {feat.Estates.MinX}  " +
+                          $"\r\n    min Y: {feat.Estates.MinY}  " +
+                          $"\r\n    max X: {feat.Estates.MaxX}  " +
+                          $"\r\n    max Y: {feat.Estates.MaxY}  ";
+            info.Text = text;
         }
 
         private void optimizeBtn_Click(object sender, EventArgs e)
         {
             feat.Optimize();
+            string text = $"Parcel quad tree info: " +
+                          $"\r\n    min X: {feat.Parcels.MinX}  " +
+                          $"\r\n    min Y: {feat.Parcels.MinY}  " +
+                          $"\r\n    max X: {feat.Parcels.MaxX}  " +
+                          $"\r\n    max Y: {feat.Parcels.MaxY}  " +
+                          $"\r\nEstate quad tree info: " +
+                          $"\r\n    min X: {feat.Estates.MinX}  " +
+                          $"\r\n    min Y: {feat.Estates.MinY}  " +
+                          $"\r\n    max X: {feat.Estates.MaxX}  " +
+                          $"\r\n    max Y: {feat.Estates.MaxY}  ";
+            info.Text = text;
+
+
         }
     }
 }

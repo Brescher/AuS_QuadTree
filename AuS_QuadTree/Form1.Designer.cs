@@ -130,6 +130,7 @@
             tabPage5 = new TabPage();
             tabPage6 = new TabPage();
             optimizeBtn = new Button();
+            info = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tabControl1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -1059,11 +1060,21 @@
             optimizeBtn.UseVisualStyleBackColor = true;
             optimizeBtn.Click += optimizeBtn_Click;
             // 
+            // info
+            // 
+            info.Location = new Point(899, 36);
+            info.Multiline = true;
+            info.Name = "info";
+            info.ReadOnly = true;
+            info.Size = new Size(170, 171);
+            info.TabIndex = 62;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1154, 826);
+            Controls.Add(info);
             Controls.Add(tabControl1);
             Controls.Add(dataGridView1);
             Controls.Add(load);
@@ -1084,6 +1095,7 @@
             tabPage5.PerformLayout();
             tabPage6.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1189,5 +1201,6 @@
         private TextBox pMaxLength;
         private TextBox pMaxWidth;
         private Label label34;
+        private TextBox info;
     }
 }

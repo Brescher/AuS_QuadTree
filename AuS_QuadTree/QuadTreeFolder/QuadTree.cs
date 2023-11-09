@@ -232,7 +232,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             return list;
         }
 
-        public bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
+        private bool CompareCoordinatesNode(QTNode<TKey> node, double x1, double y1, double x2, double y2)
         {
             if (((node.LowerBoundX <= x1 && node.UpperBoundX >= x1) || (node.LowerBoundX <= x2 && node.UpperBoundX >= x2) ||
                (node.LowerBoundX >= x1 && node.LowerBoundX <= x2) || (node.UpperBoundX >= x1 && node.UpperBoundX <= x2)) &&
@@ -247,7 +247,7 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
         }
 
-        public bool CompareCoordinatesData(TKey data, double x1, double y1, double x2, double y2)
+        private bool CompareCoordinatesData(TKey data, double x1, double y1, double x2, double y2)
         {
             if (data.CompareIntersect(x1, y1, x2, y2) == 1)
             {
@@ -781,21 +781,6 @@ namespace AuS_QuadTree.QuadTreeFolder
             foreach (QTNode<TKey> item in nodes)
             {
                 if(item.Height > height)
-                {
-                    height = item.Height;
-                }
-            }
-
-            return height;
-        }
-
-        private int GetMaxHeight(QTNode<TKey> node)
-        {
-            int height = 0;
-            List<QTNode<TKey>> nodes = LevelOrder(node);
-            foreach (QTNode<TKey> item in nodes)
-            {
-                if (item.Height > height)
                 {
                     height = item.Height;
                 }

@@ -17,8 +17,8 @@ namespace AuS_QuadTree.ImplementedFeatures
         QuadTree<Parcel> parcels;
         QuadTree<Estate> estates;
 
-        List<Parcel> parceli = new List<Parcel>();
-        List<Estate> nehnutelnosti = new List<Estate>();
+        List<Parcel> parcelsList = new List<Parcel>();
+        List<Estate> estatesList = new List<Estate>();
 
         public QuadTree<Parcel> Parcels { get => parcels; set => parcels = value; }
         public QuadTree<Estate> Estates { get => estates; set => estates = value; }
@@ -86,12 +86,12 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         public List<Parcel> FindParcels(double X1, double Y1, double X2, double Y2)
         {
-            return parceli = Parcels.Find(X1, Y1, X2, Y2);
+            return parcelsList = Parcels.Find(X1, Y1, X2, Y2);
         }
 
         public List<Estate> FindEstates(double X1, double Y1, double X2, double Y2)
         {
-            return nehnutelnosti = Estates.Find(X1, Y1, X2, Y2);
+            return estatesList = Estates.Find(X1, Y1, X2, Y2);
         }
 
 
@@ -147,10 +147,10 @@ namespace AuS_QuadTree.ImplementedFeatures
             }
         }
 
-        public GPS GenerateGPS(double X1, double Y1)
+        private GPS GenerateGPS(double X1, double Y1)
         {
             char latitude, longitude;
-            if (X1 > parcels.MaxX / 2)
+            if (X1 > (parcels.MaxX - parcels.MinX) / 2)
             {
                 longitude = 'E';
             }
@@ -159,7 +159,7 @@ namespace AuS_QuadTree.ImplementedFeatures
                 longitude = 'W';
             }
 
-            if (Y1 > parcels.MaxY / 2)
+            if (Y1 > (parcels.MaxY - parcels.MinY) / 2)
             {
                 latitude = 'S';
             }
@@ -207,7 +207,7 @@ namespace AuS_QuadTree.ImplementedFeatures
             CreateReferences();
         }
 
-        public void LoadParcels()
+        private void LoadParcels()
         {
             string filePath = @"..\..\..\Data\parcels.csv"; 
 
@@ -261,7 +261,7 @@ namespace AuS_QuadTree.ImplementedFeatures
             }
         }
 
-        public void LoadEstates()
+        private void LoadEstates()
         {
             string filePath = @"..\..\..\Data\estates.csv";
 
@@ -315,7 +315,7 @@ namespace AuS_QuadTree.ImplementedFeatures
             }
         }
 
-        public void CreateReferences()
+        private void CreateReferences()
         {
             List<Parcel> parceli = Parcels.Find(Parcels.MinX, Parcels.MinY, Parcels.MaxX, Parcels.MaxY);
             foreach (Parcel par in parceli)
@@ -345,12 +345,28 @@ namespace AuS_QuadTree.ImplementedFeatures
             double x = (parcelsTest.MaxX - parcelsTest.MinX) / 2;
             double y = (parcelsTest.MaxY - parcelsTest.MinY) / 2;
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 500000; i++)
+            {
+                double X1 = Math.Round(randomGPS1.NextDouble() * (parcelsTest.MaxX - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (parcelsTest.MaxY - 25), 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
+                double X2 = X1 + increaseX;
+                double Y2 = Y1 + increaseY;
+
+                GPS GPS1 = new GPS('A', 'A', X1, Y1);
+                GPS GPS2 = new GPS('A', 'A', X2, Y2);
+                Parcel parcela = new Parcel(i, $"parcela {i}", GPS1, GPS2);
+                parcela.IdentificationKey = i;
+                parcelsTest.Insert(parcela);
+            }
+
+            for (int i = 0; i < 500000; i++)
             {
                 double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
                 double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
-                double increaseX = Math.Round(increaseXGPS.NextDouble() * 200, 2);
-                double increaseY = Math.Round(increaseYGPS.NextDouble() * 200, 2);
+                double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
+                double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
                 double X2 = X1 + increaseX;
                 double Y2 = Y1 + increaseY;
 
@@ -368,8 +384,8 @@ namespace AuS_QuadTree.ImplementedFeatures
             Stopwatch stopwatchDelete = new Stopwatch();
             for (int i = 0; i < 100000; i++)
             {
-                double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
-                double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
+                double X1 = Math.Round(randomGPS1.NextDouble() * (parcelsTest.MaxX - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (parcelsTest.MaxX - 25), 2);
                 double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
                 double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
                 double X2 = X1 + increaseX;
@@ -405,8 +421,8 @@ namespace AuS_QuadTree.ImplementedFeatures
             Stopwatch stopwatchDeleteOpt = new Stopwatch();
             for (int i = 0; i < 100000; i++)
             {
-                double X1 = Math.Round(randomGPS1.NextDouble() * (x - 25), 2);
-                double Y1 = Math.Round(randomGPS2.NextDouble() * (y - 25), 2);
+                double X1 = Math.Round(randomGPS1.NextDouble() * (parcelsTest.MaxX - 25), 2);
+                double Y1 = Math.Round(randomGPS2.NextDouble() * (parcelsTest.MaxX - 25), 2);
                 double increaseX = Math.Round(increaseXGPS.NextDouble() * 25, 2);
                 double increaseY = Math.Round(increaseYGPS.NextDouble() * 25, 2);
                 double X2 = X1 + increaseX;

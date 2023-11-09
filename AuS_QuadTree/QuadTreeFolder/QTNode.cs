@@ -172,24 +172,6 @@ namespace AuS_QuadTree.QuadTreeFolder
             }
         }
 
-        //public void ReallocateDataAndDeallocateSons()
-        //{
-        //    for(int i = 0; i < parent.Children.Length;i++)
-        //    {
-        //        foreach(TKey item in parent.Children[i].records)
-        //        {
-        //            parent.records.Add(item);
-        //        }
-        //        foreach (TKey item in parent.Children[i].DoesntFitInSon)
-        //        {
-        //            parent.records.Add(item);
-        //        }
-        //        parent.Children[i].Records.Clear();
-        //        parent.Children[i].DoesntFitInSon.Clear();
-        //    }
-        //    parent.DeallocateSons();
-        //}
-
         //metoda pozrie ci pri zmene vysky moze osekat potomkov
         //vyuziva sa pri zmene vysky ked je node.Height == tree.MaxHeight
         public bool CheckNumberOfItemsForHeightChange()

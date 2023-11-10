@@ -194,8 +194,10 @@ namespace AuS_QuadTree.ImplementedFeatures
                                        $"{est.UpperBound.X}; {est.UpperBound.Y}");
             }
 
-            File.WriteAllText(@"..\..\..\Data\parcels.csv", parcelsText.ToString());
-            File.WriteAllText(@"..\..\..\Data\estates.csv", estatesText.ToString());
+            //File.WriteAllText(@"..\..\..\Data\parcels.csv", parcelsText.ToString());
+            File.WriteAllText(Path.Combine(Application.StartupPath, "parcels.csv"), parcelsText.ToString());
+            //File.WriteAllText(@"..\..\..\Data\estates.csv", estatesText.ToString());
+            File.WriteAllText(Path.Combine(Application.StartupPath, "estates.csv"), estatesText.ToString());
         }
 
         public void Load()
@@ -209,7 +211,8 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         private void LoadParcels()
         {
-            string filePath = @"..\..\..\Data\parcels.csv"; 
+            //string filePath = @"..\..\..\Data\parcels.csv"; 
+            string filePath = Path.Combine(Application.StartupPath, "parcels.csv");
 
             using (TextFieldParser parser = new TextFieldParser(filePath))
             {
@@ -263,7 +266,9 @@ namespace AuS_QuadTree.ImplementedFeatures
 
         private void LoadEstates()
         {
-            string filePath = @"..\..\..\Data\estates.csv";
+            string applicationPath = Path.Combine(Application.StartupPath, "estates.csv");
+            //string filePath = @"..\..\..\Data\estates.csv";
+            string filePath = Path.Combine(Application.StartupPath, "estates.csv");
 
             using (TextFieldParser parser = new TextFieldParser(filePath))
             {
